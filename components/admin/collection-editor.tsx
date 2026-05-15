@@ -25,8 +25,8 @@ type CollectionEditorProps = {
     previousState: FormActionState,
     formData: FormData,
   ) => Promise<FormActionState>;
-  deleteAction: (formData: FormData) => Promise<unknown>;
-  moveAction: (formData: FormData) => Promise<unknown>;
+  deleteAction: (formData: FormData) => Promise<void>;
+  moveAction: (formData: FormData) => Promise<void>;
   locale?: "en" | "ar";
   titleField: string;
   subtitleField?: string;

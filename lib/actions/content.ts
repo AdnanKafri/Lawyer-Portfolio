@@ -490,7 +490,7 @@ export async function saveCollectionItemAction(
   }
 }
 
-export async function deleteCollectionItemAction(formData: FormData) {
+export async function deleteCollectionItemAction(formData: FormData): Promise<void> {
   const adminContext = await requireAdminContext();
   const entity = parseEntity(formData.get("entity"));
   const localeValue = parseOptionalString(formData.get("locale"));
@@ -534,7 +534,7 @@ export async function deleteCollectionItemAction(formData: FormData) {
   revalidateContentPaths(localizedContentPaths(effectiveLocale, sectionMap[entity] ?? "content"));
 }
 
-export async function moveCollectionItemAction(formData: FormData) {
+export async function moveCollectionItemAction(formData: FormData): Promise<void> {
   const adminContext = await requireAdminContext();
   const entity = parseEntity(formData.get("entity"));
   const id = parseOptionalString(formData.get("id"));

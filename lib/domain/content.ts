@@ -35,6 +35,15 @@ export type LocalizedCollectionEntity =
 export type GlobalCollectionEntity = "social_links";
 export type CollectionEntity = LocalizedCollectionEntity | GlobalCollectionEntity;
 
+type CollectionRowsMap = {
+  services: Database["public"]["Tables"]["services"]["Row"][];
+  credentials: Database["public"]["Tables"]["credentials"]["Row"][];
+  statistics: Database["public"]["Tables"]["statistics"]["Row"][];
+  testimonials: Database["public"]["Tables"]["testimonials"]["Row"][];
+  faqs: Database["public"]["Tables"]["faqs"]["Row"][];
+  social_links: Database["public"]["Tables"]["social_links"]["Row"][];
+};
+
 type PublicSiteContent = {
   hero: HeroContent;
   services: ServiceItem[];
@@ -480,14 +489,12 @@ function getServiceClientOrThrow() {
   return supabase;
 }
 
-async function getActiveOrganizationOrThrow(supabase: ContentClient) {
-  const organization = await getActiveOrganization(supabase);
+type EqBuilder<T> = {
+  eq(column: string, value: string): T;
+};
 
-  if (!organization) {
-    throw new Error("No active organization found.");
-  }
-
-  return organization;
+function applyEq<T>(builder: T, column: string, value: string) {
+  return (builder as unknown as EqBuilder<T>).eq(column, value);
 }
 
 function isLocalizedEntity(entity: CollectionEntity): entity is LocalizedCollectionEntity {
@@ -508,7 +515,7 @@ async function getNextSortOrder(
     .limit(1);
 
   if (isLocalizedEntity(entity) && locale) {
-    query = query.eq("locale", locale);
+    query = applyEq(query, "locale", locale);
   }
 
   const { data } = await query.maybeSingle();
@@ -773,39 +780,39 @@ export async function getSocialLinksForAdmin() {
   return mapSocialLinks(data ?? null);
 }
 
-export async function getCollectionItems(
-  entity: CollectionEntity,
+export async function getCollectionItems<E extends CollectionEntity>(
+  entity: E,
   locale?: Locale,
-) {
+): Promise<CollectionRowsMap[E]> {
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
-    return [];
+    return [] as CollectionRowsMap[E];
   }
 
   const organization = await getActiveOrganization(supabase);
 
   if (!organization) {
-    return [];
+    return [] as CollectionRowsMap[E];
   }
 
-  let query = supabase
-    .from(entity)
-    .select("*")
-    .eq("organization_id", organization.id)
-    .order("sort_order", { ascending: true });
+  let query = applyEq(
+    supabase.from(entity).select("*"),
+    "organization_id",
+    organization.id,
+  ).order("sort_order", { ascending: true });
 
   if (isLocalizedEntity(entity) && locale) {
-    query = query.eq("locale", locale);
+    query = applyEq(query, "locale", locale);
   }
 
   const { data, error } = await query;
 
   if (error || !data) {
-    return [];
+    return [] as CollectionRowsMap[E];
   }
 
-  return data;
+  return data as unknown as CollectionRowsMap[E];
 }
 
 export async function getMediaOptions(organizationId: string): Promise<MediaOption[]> {
@@ -1044,10 +1051,15 @@ export async function upsertCollectionItem(input: {
       return;
     }
 
-    const sortOrder = await getNextSortOrder(supabase, input.entity, input.organizationId, input.locale);
+    const sortOrder = await getNextSortOrder(
+      supabase,
+      input.entity,
+      input.organizationId,
+      input.locale ?? "en",
+    );
     const { error } = await supabase.from("services").insert({
       organization_id: input.organizationId,
-      locale: input.locale,
+      locale: input.locale ?? "en",
       slug: String(input.values.slug),
       title: String(input.values.title),
       description: String(input.values.description),
@@ -1077,10 +1089,15 @@ export async function upsertCollectionItem(input: {
       return;
     }
 
-    const sortOrder = await getNextSortOrder(supabase, input.entity, input.organizationId, input.locale);
+    const sortOrder = await getNextSortOrder(
+      supabase,
+      input.entity,
+      input.organizationId,
+      input.locale ?? "en",
+    );
     const { error } = await supabase.from("credentials").insert({
       organization_id: input.organizationId,
-      locale: input.locale,
+      locale: input.locale ?? "en",
       title: String(input.values.title),
       description: String(input.values.description),
       sort_order: sortOrder,
@@ -1109,10 +1126,15 @@ export async function upsertCollectionItem(input: {
       return;
     }
 
-    const sortOrder = await getNextSortOrder(supabase, input.entity, input.organizationId, input.locale);
+    const sortOrder = await getNextSortOrder(
+      supabase,
+      input.entity,
+      input.organizationId,
+      input.locale ?? "en",
+    );
     const { error } = await supabase.from("statistics").insert({
       organization_id: input.organizationId,
-      locale: input.locale,
+      locale: input.locale ?? "en",
       label: String(input.values.label),
       value: String(input.values.value),
       description: String(input.values.description),
@@ -1146,10 +1168,15 @@ export async function upsertCollectionItem(input: {
       return;
     }
 
-    const sortOrder = await getNextSortOrder(supabase, input.entity, input.organizationId, input.locale);
+    const sortOrder = await getNextSortOrder(
+      supabase,
+      input.entity,
+      input.organizationId,
+      input.locale ?? "en",
+    );
     const { error } = await supabase.from("testimonials").insert({
       organization_id: input.organizationId,
-      locale: input.locale,
+      locale: input.locale ?? "en",
       author_name: String(input.values.author),
       author_role: String(input.values.role ?? ""),
       quote: String(input.values.quote),
@@ -1182,10 +1209,15 @@ export async function upsertCollectionItem(input: {
       return;
     }
 
-    const sortOrder = await getNextSortOrder(supabase, input.entity, input.organizationId, input.locale);
+    const sortOrder = await getNextSortOrder(
+      supabase,
+      input.entity,
+      input.organizationId,
+      input.locale ?? "en",
+    );
     const { error } = await supabase.from("faqs").insert({
       organization_id: input.organizationId,
-      locale: input.locale,
+      locale: input.locale ?? "en",
       question: String(input.values.question),
       answer: String(input.values.answer),
       sort_order: sortOrder,
@@ -1241,7 +1273,7 @@ export async function deleteCollectionItem(
       throw new Error("A locale is required for localized content.");
     }
 
-    query = query.eq("locale", locale);
+    query = applyEq(query, "locale", locale);
   }
 
   const { error } = await query;
@@ -1267,7 +1299,7 @@ export async function moveCollectionItem(input: {
     .order("sort_order", { ascending: true });
 
   if (isLocalizedEntity(input.entity) && input.locale) {
-    query = query.eq("locale", input.locale);
+    query = applyEq(query, "locale", input.locale);
   }
 
   const { data, error } = await query;
@@ -1304,8 +1336,8 @@ export async function moveCollectionItem(input: {
     .eq("organization_id", input.organizationId);
 
   if (isLocalizedEntity(input.entity) && input.locale) {
-    currentUpdate = currentUpdate.eq("locale", input.locale);
-    targetUpdate = targetUpdate.eq("locale", input.locale);
+    currentUpdate = applyEq(currentUpdate, "locale", input.locale);
+    targetUpdate = applyEq(targetUpdate, "locale", input.locale);
   }
 
   const [currentResult, targetResult] = await Promise.all([

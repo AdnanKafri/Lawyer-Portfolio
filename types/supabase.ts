@@ -9,10 +9,24 @@ export type Json =
 type Row<T> = T;
 type Insert<T> = T;
 type Update<T> = Partial<T>;
+type WithRelationships<T> = {
+  [K in keyof T]: T[K] extends {
+    Row: infer RowType;
+    Insert: infer InsertType;
+    Update: infer UpdateType;
+  }
+    ? {
+        Row: RowType;
+        Insert: InsertType;
+        Update: UpdateType;
+        Relationships: [];
+      }
+    : T[K];
+};
 
 export type Database = {
   public: {
-    Tables: {
+    Tables: WithRelationships<{
       organizations: {
         Row: Row<{
           id: string;
@@ -603,7 +617,7 @@ export type Database = {
           updated_at: string;
         }>;
       };
-    };
+    }>;
     Views: Record<string, never>;
     Functions: {
       is_any_admin: {

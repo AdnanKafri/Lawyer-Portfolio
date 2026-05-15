@@ -48,17 +48,21 @@ type ContentFormProps = {
     formData: FormData,
   ) => Promise<FormActionState>;
   fields: ContentField[];
-  initialValues?: Record<string, string | number | boolean | null | undefined>;
-  hiddenFields?: Record<string, string | number | boolean | null | undefined>;
+  initialValues?: Record<string, unknown>;
+  hiddenFields?: Record<string, unknown>;
   submitLabel: string;
   pendingLabel?: string;
   className?: string;
   onSuccess?: () => void;
 };
 
-function getStringValue(value: string | number | boolean | null | undefined) {
+function getStringValue(value: unknown) {
   if (value === null || value === undefined) {
     return "";
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => String(item)).join(", ");
   }
 
   return String(value);
