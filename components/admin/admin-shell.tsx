@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { LogoutButton } from "@/components/admin/logout-button";
 import { AdminNav } from "@/components/admin/admin-nav";
+import { BRAND_CMS_NAME } from "@/lib/constants/brand";
 import type { AdminContext } from "@/lib/domain/admin";
 
 export function AdminShell({
@@ -18,10 +19,10 @@ export function AdminShell({
           <Link href="/admin" className="block rounded-[28px] border border-border bg-black/20 p-5">
             <p className="text-xs uppercase tracking-[0.28em] text-accent">Dashboard</p>
             <h1 className="mt-3 text-2xl font-semibold text-foreground">
-              Al Manzour Legal CMS
+              {BRAND_CMS_NAME}
             </h1>
             <p className="mt-2 text-sm leading-7 text-muted-foreground">
-              Premium content operations for a bilingual law firm presence.
+              Premium content operations for a bilingual personal legal brand.
             </p>
           </Link>
           <AdminNav />

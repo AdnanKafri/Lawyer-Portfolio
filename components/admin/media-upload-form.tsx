@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { uploadMediaAction } from "@/lib/actions/media";
 import { defaultFormActionState } from "@/lib/actions/form-state";
+import { FormSelect } from "@/components/admin/form-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -13,11 +14,13 @@ export function MediaUploadForm() {
     defaultFormActionState,
   );
   const formRef = useRef<HTMLFormElement>(null);
+  const [selectKey, setSelectKey] = useState(0);
 
   useEffect(() => {
     if (state.status === "success") {
       toast.success(state.message);
       formRef.current?.reset();
+      setSelectKey((current) => current + 1);
     }
 
     if (state.status === "error") {
@@ -35,15 +38,18 @@ export function MediaUploadForm() {
         />
       </div>
       <div className="grid gap-4">
-        <select
+        <FormSelect
+          key={selectKey}
           name="locale"
-          className="rounded-2xl border border-border bg-background/40 px-4 py-3 text-sm text-foreground outline-none"
+          ariaLabel="Locale"
+          placeholder="All locales"
+          emptyLabel="All locales"
           defaultValue=""
-        >
-          <option value="">All locales</option>
-          <option value="en">English</option>
-          <option value="ar">Arabic</option>
-        </select>
+          options={[
+            { label: "English", value: "en" },
+            { label: "Arabic", value: "ar" },
+          ]}
+        />
         <p className="text-xs leading-6 text-muted-foreground">
           Upload premium images first, then attach them to hero, about, SEO, or brand settings.
         </p>

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { defaultFormActionState, type FormActionState } from "@/lib/actions/form-state";
+import type { FormActionState } from "@/lib/actions/form-state";
 import { requireAdminContext } from "@/lib/domain/admin";
 import {
   type CollectionEntity,
@@ -581,5 +581,3 @@ export async function moveCollectionItemAction(formData: FormData): Promise<void
 
   revalidateContentPaths(localizedContentPaths(locale, sectionMap[entity] ?? "content"));
 }
-
-export { defaultFormActionState };

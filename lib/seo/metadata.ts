@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BRAND_NAME } from "@/lib/constants/brand";
 import { env } from "@/lib/env";
 
 export function getBaseUrl() {
@@ -29,7 +30,7 @@ export function createDefaultMetadata(input: MetadataInput): Metadata {
       title: input.title,
       description: input.description,
       url: absoluteUrl(input.path),
-      siteName: input.siteName ?? "Al Manzour Legal",
+      siteName: input.siteName ?? BRAND_NAME,
       locale: input.locale === "ar" ? "ar_AE" : "en_US",
       type: "website",
     },

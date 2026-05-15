@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Sans_Arabic, Manrope } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/components/providers/app-providers";
+import { BRAND_NAME } from "@/lib/constants/brand";
 import { createDefaultMetadata } from "@/lib/seo/metadata";
 
 const manrope = Manrope({
@@ -18,9 +19,9 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
 });
 
 export const metadata: Metadata = createDefaultMetadata({
-  title: "Al Manzour Legal",
+  title: BRAND_NAME,
   description:
-    "Premium bilingual legal services platform for a modern law firm presence.",
+    "Premium bilingual legal services platform for a modern personal legal brand.",
   path: "/",
 });
 

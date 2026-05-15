@@ -1,4 +1,5 @@
 import { absoluteUrl } from "@/lib/seo/metadata";
+import { BRAND_NAME } from "@/lib/constants/brand";
 
 export function buildAttorneySchemas(
   locale: string,
@@ -7,7 +8,7 @@ export function buildAttorneySchemas(
     faqs: { question: string; answer: string }[];
     contact: { phone: string; email: string; address: string };
   },
-  siteName = "Al Manzour Legal",
+  siteName = BRAND_NAME,
 ) {
   return {
     "@context": "https://schema.org",

@@ -41,7 +41,11 @@ export default async function AdminLeadsPage() {
                     {lead.status}
                   </span>
                   <span className="text-xs text-muted">
-                    {new Date(lead.created_at).toLocaleString()}
+                    {new Intl.DateTimeFormat("en", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                      timeZone: "UTC",
+                    }).format(new Date(lead.created_at))}
                   </span>
                 </div>
               </div>

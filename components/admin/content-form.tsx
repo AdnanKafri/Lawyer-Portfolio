@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useEffect, useMemo, useRef } from "react";
+import { useActionState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import { defaultFormActionState, type FormActionState } from "@/lib/actions/form-state";
+import { FormSelect } from "@/components/admin/form-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,12 +27,13 @@ export type ContentField =
       span?: 1 | 2;
       rows?: number;
     }
-  | {
+    | {
       name: string;
       label: string;
       type: "select";
       helperText?: string;
       span?: 1 | 2;
+      placeholder?: string;
       options: { label: string; value: string }[];
     }
   | {
@@ -79,7 +81,6 @@ export function ContentForm({
   onSuccess,
 }: ContentFormProps) {
   const [state, formAction, isPending] = useActionState(action, defaultFormActionState);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const hiddenInputs = useMemo(
     () =>
@@ -92,7 +93,6 @@ export function ContentForm({
   useEffect(() => {
     if (state.status === "success") {
       toast.success(state.message);
-      formRef.current?.reset();
       onSuccess?.();
     }
 
@@ -102,7 +102,7 @@ export function ContentForm({
   }, [state, onSuccess]);
 
   return (
-    <form ref={formRef} action={formAction} className={cn("grid gap-5", className)}>
+    <form action={formAction} className={cn("grid gap-5", className)}>
       {hiddenInputs}
       <div className="grid gap-4 md:grid-cols-2">
         {fields.map((field) => {
@@ -130,26 +130,22 @@ export function ContentForm({
 
           if (field.type === "select") {
             return (
-              <label key={field.name} className={cn("grid gap-2", spanClass)}>
+              <div key={field.name} className={cn("grid gap-2", spanClass)}>
                 <span className="text-sm font-medium text-foreground">{field.label}</span>
-                <select
+                <FormSelect
                   name={field.name}
                   defaultValue={getStringValue(value)}
-                  className="rounded-[1.35rem] border border-border bg-white/[0.03] px-4 py-3.5 text-sm text-foreground outline-none transition focus:border-border-strong focus:ring-2 focus:ring-ring"
-                >
-                  <option value="">Select an option</option>
-                  {field.options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                  placeholder={field.placeholder ?? "Select an option"}
+                  emptyLabel={field.placeholder ?? "Select an option"}
+                  ariaLabel={field.label}
+                  options={field.options}
+                />
                 {field.helperText ? (
                   <span className="text-xs leading-6 text-muted-foreground">
                     {field.helperText}
                   </span>
                 ) : null}
-              </label>
+              </div>
             );
           }
 

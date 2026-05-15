@@ -1,20 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { adminNavigation } from "@/lib/constants/navigation";
 
 export function AdminNav() {
   const pathname = usePathname();
+  const [hydratedPath, setHydratedPath] = useState("");
+
+  useEffect(() => {
+    setHydratedPath(pathname);
+  }, [pathname]);
 
   return (
     <nav className="mt-8 grid gap-2">
       {adminNavigation.map((item) => {
         const isActive =
           item.href === "/admin"
-            ? pathname === item.href
-            : pathname === item.href || pathname.startsWith(`${item.href}/`);
+            ? hydratedPath === item.href
+            : hydratedPath === item.href || hydratedPath.startsWith(`${item.href}/`);
 
         return (
           <Link

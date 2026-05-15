@@ -9,15 +9,21 @@ import type {
   StatisticItem,
   TestimonialItem,
 } from "@/types/domain";
+import {
+  BRAND_EMAIL,
+  BRAND_LINKEDIN_URL,
+  BRAND_NAME,
+  BRAND_TAGLINE,
+} from "@/lib/constants/brand";
 
 function createHero(locale: string): HeroContent {
   const isArabic = locale === "ar";
 
   return {
-    eyebrow: isArabic ? "مكتب محاماة واستشارات قانونية" : "Discreet legal counsel",
+    eyebrow: isArabic ? "مكتب محاماة واستشارات قانونية" : "Mohammad Nour",
     title: isArabic
       ? "تمثيل قانوني رفيع للشركات والأفراد في القضايا التجارية والعقود والنزاعات الحساسة"
-      : "Premium legal representation for complex disputes, commercial matters, and strategic advisory work",
+      : "Mohammad Nour advises on complex disputes, commercial matters, and strategic advisory work",
     description: isArabic
       ? "نقدم مرافعة دقيقة واستشارات قانونية عملية لرجال الأعمال والشركات والعملاء الذين يحتاجون إلى الوضوح والثقة وسرعة الاستجابة."
       : "We advise founders, executives, investors, and private clients on commercial risk, dispute strategy, contracts, and high-stakes decisions with calm precision.",
@@ -91,7 +97,7 @@ function createAbout(locale: string): AboutContent {
     eyebrow: isArabic ? "نبذة مهنية" : "Professional profile",
     title: isArabic
       ? "خبرة قانونية تجمع بين الانضباط المهني وفهم الواقع التجاري"
-      : "A legal practice built on disciplined counsel, commercial awareness, and measured advocacy",
+      : "Mohammad Nour combines disciplined counsel, commercial awareness, and measured advocacy",
     summary: isArabic
       ? "نحن نعمل مع الشركات والأفراد الذين يحتاجون إلى استشارة دقيقة وتمثيل موثوق في القضايا التي لا تحتمل الارتجال أو الغموض."
       : "Our work is centered on matters where reputation, clarity, and legal judgment matter. We combine advisory discipline with practical representation for clients who value precision.",
@@ -250,7 +256,7 @@ function createContact(locale: string): ContactInfo {
       : "If your matter calls for prompt legal judgment or careful representation, share the essentials and we will respond with discretion and urgency.",
     phone: "+971 4 555 0188",
     whatsapp: "+971 50 555 0188",
-    email: "office@almanzourlegal.com",
+    email: BRAND_EMAIL,
     address: isArabic ? "دبي، الإمارات العربية المتحدة" : "Dubai, United Arab Emirates",
     responseTimeLabel: isArabic ? "خلال 24 ساعة" : "Within 24 hours",
     mapEmbedUrl: null,
@@ -259,10 +265,10 @@ function createContact(locale: string): ContactInfo {
 
 export function getDefaultSiteSettings(): SiteSettings {
   return {
-    siteName: "Al Manzour Legal",
-    tagline: "Commercial law, contracts, and dispute strategy",
+    siteName: BRAND_NAME,
+    tagline: BRAND_TAGLINE,
     primaryPhone: "+971 4 555 0188",
-    primaryEmail: "office@almanzourlegal.com",
+    primaryEmail: BRAND_EMAIL,
     officeAddress: "Dubai, United Arab Emirates",
   };
 }
@@ -273,7 +279,7 @@ export function getDefaultSocialLinks(): SocialLink[] {
       id: "linkedin",
       platform: "linkedin",
       label: "LinkedIn",
-      url: "https://www.linkedin.com/company/al-manzour-legal",
+      url: BRAND_LINKEDIN_URL,
       sortOrder: 0,
       isActive: true,
     },

@@ -1,5 +1,5 @@
 insert into public.organizations (name, slug, business_type, default_locale, is_active)
-values ('Al Manzour Legal', 'counsel-studio', 'lawyer', 'en', true)
+values ('Mohammad Nour', 'mohammad-nour', 'lawyer', 'en', true)
 on conflict (slug) do update
 set
   name = excluded.name,
@@ -10,7 +10,7 @@ set
 with active_org as (
   select id
   from public.organizations
-  where slug = 'counsel-studio'
+  where slug = 'mohammad-nour'
   limit 1
 )
 insert into public.pages (organization_id, page_key, locale, slug, is_active)
@@ -22,7 +22,7 @@ on conflict (organization_id, page_key, locale) do nothing;
 with active_org as (
   select id
   from public.organizations
-  where slug = 'counsel-studio'
+  where slug = 'mohammad-nour'
   limit 1
 )
 insert into public.hero_sections (
@@ -64,7 +64,7 @@ on conflict (organization_id, locale) do nothing;
 with active_org as (
   select id
   from public.organizations
-  where slug = 'counsel-studio'
+  where slug = 'mohammad-nour'
   limit 1
 )
 insert into public.about_sections (
@@ -97,7 +97,7 @@ on conflict (organization_id, locale) do nothing;
 with active_org as (
   select id
   from public.organizations
-  where slug = 'counsel-studio'
+  where slug = 'mohammad-nour'
   limit 1
 )
 insert into public.contact_info (
@@ -126,7 +126,7 @@ select
   end,
   '+971 4 555 0188',
   '+971 50 555 0188',
-  'office@almanzourlegal.com',
+  'office@mohammadnour.com',
   case when locale_value = 'ar' then 'دبي، الإمارات العربية المتحدة' else 'Dubai, United Arab Emirates' end,
   case when locale_value = 'ar' then 'خلال 24 ساعة' else 'Within 24 hours' end
 from active_org
