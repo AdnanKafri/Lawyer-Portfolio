@@ -20,37 +20,37 @@ function createHero(locale: string): HeroContent {
   const isArabic = locale === "ar";
 
   return {
-    eyebrow: isArabic ? "مكتب محاماة واستشارات قانونية" : "Mohammad Nour",
+    eyebrow: isArabic ? "محمد نور" : "Mohammad Nour",
     title: isArabic
-      ? "تمثيل قانوني رفيع للشركات والأفراد في القضايا التجارية والعقود والنزاعات الحساسة"
-      : "Mohammad Nour advises on complex disputes, commercial matters, and strategic advisory work",
+      ? "محاماة تجارية رصينة للشركات والأفراد"
+      : "Commercial counsel for businesses and disputes",
     description: isArabic
-      ? "نقدم مرافعة دقيقة واستشارات قانونية عملية لرجال الأعمال والشركات والعملاء الذين يحتاجون إلى الوضوح والثقة وسرعة الاستجابة."
+      ? "نقدم استشارات قانونية هادئة وتمثيلًا مهنيًا في العقود والنزاعات والمسائل التجارية الحساسة، مع تركيز واضح على السرية وسرعة الاستجابة."
       : "We advise founders, executives, investors, and private clients on commercial risk, dispute strategy, contracts, and high-stakes decisions with calm precision.",
-    primaryCta: isArabic ? "احجز استشارة قانونية" : "Book a consultation",
-    secondaryCta: isArabic ? "استعرض مجالات الممارسة" : "Explore practice areas",
+    primaryCta: isArabic ? "احجز استشارة" : "Book a consultation",
+    secondaryCta: isArabic ? "استعرض مجالات العمل" : "Explore practice areas",
     trustPoints: isArabic
-      ? ["استجابة خلال 24 ساعة", "سرية كاملة", "تمثيل ثنائي اللغة"]
+      ? ["استجابة خلال 24 ساعة", "سرية مهنية", "العربية والإنجليزية"]
       : ["Response within 24 hours", "Strict confidentiality", "Bilingual representation"],
     previewPanels: isArabic
       ? [
           {
             title: "النزاعات التجارية",
-            description: "استراتيجية قانونية واضحة في القضايا المعقدة والمفاوضات الحساسة.",
+            description: "استراتيجية هادئة للتفاوض والمطالبات والمواقف الحساسة.",
           },
           {
             title: "العقود والحوكمة",
-            description: "صياغة ومراجعة اتفاقيات الشركات والهياكل التعاقدية بثقة ودقة.",
+            description: "صياغة ومراجعة الاتفاقات وترتيبات الشركاء والوثائق التنفيذية.",
           },
         ]
       : [
           {
             title: "Commercial disputes",
-            description: "Clear legal strategy for contested matters, negotiations, and sensitive business exposure.",
+            description: "Measured strategy for negotiations, claims, and sensitive business exposure.",
           },
           {
             title: "Contracts and governance",
-            description: "Drafting and reviewing agreements, shareholder arrangements, and executive-facing legal frameworks.",
+            description: "Drafting and reviewing agreements, shareholder arrangements, and executive documents.",
           },
         ],
   };
