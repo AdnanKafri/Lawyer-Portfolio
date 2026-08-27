@@ -52,8 +52,16 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 7rem;
   background:
-    radial-gradient(circle at 15% 0%, rgba(193, 161, 103, 0.14), transparent 22%),
-    radial-gradient(circle at 85% 14%, rgba(86, 97, 129, 0.12), transparent 22%),
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(193, 161, 103, 0.14),
+      transparent 22%
+    ),
+    radial-gradient(
+      circle at 85% 14%,
+      rgba(86, 97, 129, 0.12),
+      transparent 22%
+    ),
     linear-gradient(180deg, #090b11 0%, #0d1118 44%, #0a0b0f 100%);
 }
 
@@ -79,6 +87,11 @@ select {
     transform 220ms ease;
 }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
 select {
   color-scheme: dark;
   appearance: none;
@@ -86,7 +99,9 @@ select {
   background-position:
     calc(100% - 1.15rem) 50%,
     calc(100% - 0.85rem) 50%;
-  background-size: 0.36rem 0.36rem, 0.36rem 0.36rem;
+  background-size:
+    0.36rem 0.36rem,
+    0.36rem 0.36rem;
   background-image:
     linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
     linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
@@ -201,7 +216,8 @@ select option:focus {
 .section-frame::after {
   content: "";
   position: absolute;
-  inset: 0 auto auto 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   width: 7rem;
   height: 1px;
   background: linear-gradient(90deg, var(--accent), transparent);

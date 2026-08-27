@@ -1,4 +1,11 @@
-import { BriefcaseBusiness, FileText, Landmark, Scale, ScrollText, Shield } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  FileText,
+  Landmark,
+  Scale,
+  ScrollText,
+  Shield,
+} from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -27,7 +34,9 @@ export function ServicesSection({
     <SectionShell id="services" className="pt-0">
       <Reveal className="section-frame">
         <SectionHeading
-          eyebrow={isArabic ? "\u0627\u0644\u062e\u062f\u0645\u0627\u062a" : "Services"}
+          eyebrow={
+            isArabic ? "\u0627\u0644\u062e\u062f\u0645\u0627\u062a" : "Services"
+          }
           title={
             isArabic
               ? "خدمات قانونية مركزة للشركات والأفراد الذين يحتاجون إلى وضوح، وسرعة، وتمثيل موثوق"
@@ -40,7 +49,7 @@ export function ServicesSection({
           }
         />
       </Reveal>
-      <div className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="mt-12 grid gap-x-8 md:grid-cols-2 xl:grid-cols-3">
         {content.map((service, index) => {
           const Icon =
             iconMap[service.iconKey as keyof typeof iconMap] ??
@@ -50,9 +59,12 @@ export function ServicesSection({
 
           return (
             <Reveal key={service.id} delay={index * 0.07}>
-              <Card interactive className="h-full p-7">
-                <div className="mb-8 flex items-center justify-between gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-[1.15rem] border border-border bg-accent/10 text-accent">
+              <Card
+                interactive
+                className="h-full rounded-none border-x-0 border-b-0 border-t border-border/80 bg-transparent p-7 shadow-none before:hidden hover:bg-white/[0.025] hover:shadow-none"
+              >
+                <div className="mb-7 flex items-center justify-between gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-accent/10 text-accent">
                     <Icon className="h-5 w-5" />
                   </div>
                   <span className="text-[0.68rem] uppercase tracking-[0.22em] text-muted">

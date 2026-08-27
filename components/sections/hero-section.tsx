@@ -24,16 +24,18 @@ export function HeroSection({
       <div
         dir={isArabic ? "rtl" : "ltr"}
         className={cn(
-          "relative overflow-hidden rounded-[2.65rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.018))] p-3 shadow-[0_30px_90px_rgba(0,0,0,0.22)] md:p-5 lg:p-6",
+          "relative overflow-hidden rounded-[1.6rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.018))] p-2 shadow-[0_30px_90px_rgba(0,0,0,0.22)] sm:p-3 md:p-5 lg:p-7",
           isArabic && "font-arabic",
         )}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(193,161,103,0.11),transparent_26%),radial-gradient(circle_at_88%_16%,rgba(255,255,255,0.04),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent)]" />
-        <div className="relative grid gap-4 lg:grid-cols-[minmax(360px,0.92fr)_minmax(0,1.08fr)] lg:gap-6">
-          <Reveal className={cn("min-w-0", isArabic ? "lg:order-2" : "lg:order-1")}>
+        <div className="relative grid gap-4 lg:grid-cols-[minmax(0,0.96fr)_minmax(360px,0.84fr)] lg:gap-8">
+          <Reveal
+            className={cn("min-w-0", isArabic ? "lg:order-2" : "lg:order-1")}
+          >
             <div
               className={cn(
-                "flex h-full flex-col justify-center rounded-[2.1rem] px-4 py-5 sm:px-6 sm:py-6 md:px-8 lg:px-10 lg:py-8",
+                "flex h-full flex-col justify-center px-4 py-5 sm:px-6 sm:py-6 md:px-8 lg:px-10 lg:py-8",
                 isArabic && "text-right",
               )}
             >
@@ -82,29 +84,35 @@ export function HeroSection({
                 <div className="grid gap-3 pt-2 sm:grid-cols-3">
                   {content.trustPoints.map((item, index) => (
                     <Reveal key={item} delay={0.08 + index * 0.05}>
-                      <div className="rounded-[1.45rem] border border-border bg-black/12 px-4 py-4">
+                      <div className="border-t border-border px-1 py-4 sm:px-0">
                         <div className="flex items-center gap-3">
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-accent/10 text-accent">
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-accent/10 text-accent">
                             <BadgeCheck className="h-4 w-4" />
                           </span>
-                          <span className="text-sm text-muted-foreground">{item}</span>
+                          <span className="text-sm text-muted-foreground">
+                            {item}
+                          </span>
                         </div>
                       </div>
                     </Reveal>
                   ))}
                 </div>
 
-                <div className="rounded-[1.7rem] border border-border bg-black/14 p-4 sm:p-5">
+                <div className="border-y border-border bg-black/10 px-1 py-4 sm:px-0 sm:py-5">
                   <div className="grid gap-4 md:grid-cols-2">
                     {content.previewPanels.slice(0, 2).map((panel, index) => (
                       <div
                         key={panel.title}
                         className={cn(
                           "space-y-2",
-                          index === 0 ? "md:border-l-0" : "md:border-s md:border-border md:ps-5",
+                          index === 0
+                            ? "md:border-l-0"
+                            : "md:border-s md:border-border md:ps-5",
                         )}
                       >
-                        <p className="text-sm font-semibold text-foreground">{panel.title}</p>
+                        <p className="text-sm font-semibold text-foreground">
+                          {panel.title}
+                        </p>
                         <p className="text-sm leading-7 text-muted-foreground">
                           {panel.description}
                         </p>
@@ -116,8 +124,11 @@ export function HeroSection({
             </div>
           </Reveal>
 
-          <Reveal delay={0.08} className={cn(isArabic ? "lg:order-1" : "lg:order-2")}>
-            <Card className="relative h-full overflow-hidden border-border bg-black/16 p-0">
+          <Reveal
+            delay={0.08}
+            className={cn(isArabic ? "lg:order-1" : "lg:order-2")}
+          >
+            <Card className="relative h-full overflow-hidden rounded-[1.2rem] border-border bg-black/16 p-0">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
               <div className="relative h-full">
                 <div className="relative aspect-[4/4.9] min-h-[420px] w-full lg:min-h-[620px]">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { IBM_Plex_Sans_Arabic, Manrope } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/components/providers/app-providers";
@@ -25,14 +26,18 @@ export const metadata: Metadata = createDefaultMetadata({
   path: "/",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const requestHeaders = await headers();
+  const locale = requestHeaders.get("x-locale") === "ar" ? "ar" : "en";
+
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
       className={`${manrope.variable} ${ibmPlexSansArabic.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">

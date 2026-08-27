@@ -21,13 +21,32 @@ export function AdminLoginCard() {
 
   return (
     <form className="space-y-4" action={formAction}>
-      <Input type="email" name="email" placeholder="Email address" required />
-      <Input type="password" name="password" placeholder="Password" required />
+      <label htmlFor="admin-login-email" className="sr-only">
+        Email address
+      </label>
+      <Input
+        id="admin-login-email"
+        type="email"
+        name="email"
+        placeholder="Email address"
+        required
+      />
+      <label htmlFor="admin-login-password" className="sr-only">
+        Password
+      </label>
+      <Input
+        id="admin-login-password"
+        type="password"
+        name="password"
+        placeholder="Password"
+        required
+      />
       <Button className="w-full" size="lg" type="submit" disabled={isPending}>
         {isPending ? "Signing in..." : "Sign in"}
       </Button>
       <p className="text-sm leading-7 text-muted-foreground">
-        Use a Supabase Auth account that also has an active `admin_users` record.
+        Use a Supabase Auth account that also has an active `admin_users`
+        record.
       </p>
     </form>
   );

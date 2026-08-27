@@ -41,7 +41,10 @@ export function Header({
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 px-[var(--section-space-x)] pt-4" dir={dir}>
+    <header
+      className="sticky top-0 z-50 px-[var(--section-space-x)] pt-4"
+      dir={dir}
+    >
       <Reveal>
         <motion.div
           animate={{
@@ -51,14 +54,17 @@ export function Header({
           }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           className={cn(
-            "mx-auto max-w-[var(--container)] rounded-[1.9rem] border backdrop-blur-xl",
+            "mx-auto max-w-[var(--container)] rounded-[1.25rem] border backdrop-blur-xl",
             isScrolled
               ? "border-border-strong bg-background/88"
               : "border-white/8 bg-black/18",
           )}
         >
           <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-5 lg:px-6">
-            <Link href={`/${locale}`} className="flex min-w-0 items-center gap-3">
+            <Link
+              href={`/${locale}`}
+              className="flex min-w-0 items-center gap-3"
+            >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-border bg-white/[0.04] text-sm font-semibold text-accent">
                 {siteSettings.logoUrl ? (
                   <Image
@@ -111,10 +117,16 @@ export function Header({
               <button
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white/[0.03] text-muted-foreground lg:hidden"
                 aria-label={isOpen ? "Close navigation" : "Open navigation"}
+                aria-controls="public-mobile-navigation"
+                aria-expanded={isOpen}
                 onClick={() => setIsOpen((current) => !current)}
                 type="button"
               >
-                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {isOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
               </button>
             </div>
           </div>
@@ -124,15 +136,19 @@ export function Header({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
+                id="public-mobile-navigation"
                 className="overflow-hidden border-t border-border lg:hidden"
               >
-                <nav className="grid gap-1 px-4 py-4">
+                <nav
+                  aria-label="Mobile navigation"
+                  className="grid gap-1 px-4 py-4"
+                >
                   {publicNavigation(locale).map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className="rounded-2xl px-4 py-3 text-sm text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
+                      className="rounded-xl border-b border-border/60 px-4 py-3 text-sm text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
                     >
                       {item.label}
                     </Link>
@@ -140,7 +156,7 @@ export function Header({
                   <Link
                     href="/admin/login"
                     onClick={() => setIsOpen(false)}
-                    className="rounded-2xl px-4 py-3 text-sm text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
+                    className="rounded-xl px-4 py-3 text-sm text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
                   >
                     Admin
                   </Link>

@@ -14,7 +14,9 @@ type FooterProps = {
 export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
   const isArabic = locale === "ar";
   const year = new Date().getFullYear();
-  const activeSocialLinks = socialLinks.filter((link) => link.isActive !== false);
+  const activeSocialLinks = socialLinks.filter(
+    (link) => link.isActive !== false,
+  );
   const navItems = publicNavigation(locale);
   const initials = siteSettings.siteName
     .split(" ")
@@ -27,7 +29,7 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
   return (
     <footer className="px-[var(--section-space-x)] pb-8 pt-6">
       <Reveal>
-        <div className="mx-auto max-w-[var(--container)] rounded-[2.1rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-8 shadow-[0_28px_80px_rgba(0,0,0,0.24)] sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-[var(--container)] rounded-[1.35rem] border border-border bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] px-6 py-8 shadow-[0_28px_80px_rgba(0,0,0,0.24)] sm:px-8 lg:px-10">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
             <div className="space-y-6">
               <div className="flex items-center gap-3">
@@ -69,13 +71,17 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
                     icon: Phone,
                     label: isArabic ? "الهاتف" : "Phone",
                     value: siteSettings.primaryPhone,
-                    href: siteSettings.primaryPhone ? `tel:${siteSettings.primaryPhone}` : undefined,
+                    href: siteSettings.primaryPhone
+                      ? `tel:${siteSettings.primaryPhone}`
+                      : undefined,
                   },
                   {
                     icon: Mail,
                     label: isArabic ? "البريد" : "Email",
                     value: siteSettings.primaryEmail,
-                    href: siteSettings.primaryEmail ? `mailto:${siteSettings.primaryEmail}` : undefined,
+                    href: siteSettings.primaryEmail
+                      ? `mailto:${siteSettings.primaryEmail}`
+                      : undefined,
                   },
                   {
                     icon: MapPin,
@@ -85,7 +91,10 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
                 ]
                   .filter((item) => Boolean(item.value))
                   .map((item) => (
-                    <div key={item.label} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <div
+                      key={item.label}
+                      className="flex items-start gap-3 text-sm text-muted-foreground"
+                    >
                       <span className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white/[0.03] text-accent">
                         <item.icon className="h-4 w-4" />
                       </span>
@@ -101,7 +110,9 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
                             {item.value}
                           </Link>
                         ) : (
-                          <p className="mt-1 text-sm font-medium text-foreground">{item.value}</p>
+                          <p className="mt-1 text-sm font-medium text-foreground">
+                            {item.value}
+                          </p>
                         )}
                       </div>
                     </div>
@@ -116,7 +127,7 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="rounded-2xl border border-transparent px-4 py-3 text-sm text-muted-foreground transition hover:border-border hover:bg-white/[0.03] hover:text-foreground"
+                    className="border-b border-border/60 px-1 py-3 text-sm text-muted-foreground transition hover:border-accent hover:text-foreground"
                   >
                     {item.label}
                   </Link>
@@ -170,15 +181,24 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
               {isArabic ? "جميع الحقوق محفوظة." : "All rights reserved."}
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <Link href={`/${locale}/legal/privacy`} className="transition hover:text-foreground">
+              <Link
+                href={`/${locale}/legal/privacy`}
+                className="transition hover:text-foreground"
+              >
                 {isArabic ? "الخصوصية" : "Privacy"}
               </Link>
               <span className="text-border">/</span>
-              <Link href={`/${locale}/legal/terms`} className="transition hover:text-foreground">
+              <Link
+                href={`/${locale}/legal/terms`}
+                className="transition hover:text-foreground"
+              >
                 {isArabic ? "الشروط" : "Terms"}
               </Link>
               <span className="text-border">/</span>
-              <Link href={`/${locale}#hero`} className="transition hover:text-foreground">
+              <Link
+                href={`/${locale}#hero`}
+                className="transition hover:text-foreground"
+              >
                 {isArabic ? "أعلى الصفحة" : "Back to top"}
               </Link>
             </div>

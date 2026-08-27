@@ -18,9 +18,11 @@ export function AboutSection({
     <SectionShell id="about">
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
         <Reveal>
-          <Card className="h-full bg-[linear-gradient(180deg,rgba(193,161,103,0.12),rgba(255,255,255,0.02))] p-7 md:p-8">
+          <Card className="h-full rounded-[1.4rem] bg-[linear-gradient(180deg,rgba(193,161,103,0.12),rgba(255,255,255,0.02))] p-7 md:p-8">
             <p className="eyebrow mb-8">
-              {isArabic ? "\u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0645\u0647\u0646\u064a" : "Profile"}
+              {isArabic
+                ? "\u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0645\u0647\u0646\u064a"
+                : "Profile"}
             </p>
             <div className="grid gap-6">
               <div className="relative overflow-hidden rounded-[1.7rem] border border-border bg-black/18">
@@ -66,7 +68,9 @@ export function AboutSection({
             {content.certificationsSummary ? (
               <Card className="mt-8 border-border/70 bg-black/14 p-5">
                 <p className="text-[0.72rem] uppercase tracking-[0.24em] text-accent">
-                  {isArabic ? "\u0627\u0639\u062a\u0645\u0627\u062f\u0627\u062a" : "Credentials"}
+                  {isArabic
+                    ? "\u0627\u0639\u062a\u0645\u0627\u062f\u0627\u062a"
+                    : "Credentials"}
                 </p>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
                   {content.certificationsSummary}
@@ -76,9 +80,14 @@ export function AboutSection({
             <div className="mt-10 grid gap-4 md:grid-cols-2">
               {content.credentials.map((credential, index) => (
                 <Reveal key={credential.id} delay={0.12 + index * 0.05}>
-                  <Card interactive className="h-full p-6">
+                  <Card
+                    interactive
+                    className="h-full rounded-none border-x-0 border-b-0 border-t border-border/80 bg-transparent p-6 shadow-none before:hidden hover:bg-white/[0.025] hover:shadow-none"
+                  >
                     <p className="eyebrow mb-4">
-                      {isArabic ? "\u0627\u0639\u062a\u0645\u0627\u062f" : "Credential"}
+                      {isArabic
+                        ? "\u0627\u0639\u062a\u0645\u0627\u062f"
+                        : "Credential"}
                     </p>
                     <p className="text-heading text-xl font-semibold text-foreground">
                       {credential.title}

@@ -15,9 +15,14 @@ export function AdminShell({
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#0b0d11_0%,#0f131b_100%)]">
       <div className="grid min-h-screen lg:grid-cols-[280px_1fr]">
-        <aside className="border-r border-border bg-surface/75 p-6 backdrop-blur">
-          <Link href="/admin" className="block rounded-[28px] border border-border bg-black/20 p-5">
-            <p className="text-xs uppercase tracking-[0.28em] text-accent">Dashboard</p>
+        <aside className="hidden border-r border-border bg-surface/75 p-6 backdrop-blur lg:block">
+          <Link
+            href="/admin"
+            className="block rounded-[28px] border border-border bg-black/20 p-5"
+          >
+            <p className="text-xs uppercase tracking-[0.28em] text-accent">
+              Dashboard
+            </p>
             <h1 className="mt-3 text-2xl font-semibold text-foreground">
               {BRAND_CMS_NAME}
             </h1>
@@ -29,14 +34,19 @@ export function AdminShell({
         </aside>
         <div className="flex min-h-screen flex-col">
           <header className="border-b border-border px-6 py-5 md:px-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-muted">
-                  Editorial dashboard
-                </p>
-                <h2 className="mt-2 text-2xl font-semibold text-foreground">
-                  Content operations and site management
-                </h2>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="pt-1 lg:hidden">
+                  <AdminNav variant="mobile" />
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-muted">
+                    Editorial dashboard
+                  </p>
+                  <h2 className="mt-2 text-2xl font-semibold text-foreground">
+                    Content operations and site management
+                  </h2>
+                </div>
               </div>
               <div className="flex items-center gap-3">
                 {adminContext ? (
@@ -44,7 +54,9 @@ export function AdminShell({
                     <p className="text-xs uppercase tracking-[0.18em] text-muted">
                       {adminContext.adminUser.role.replace("_", " ")}
                     </p>
-                    <p className="text-sm text-foreground">{adminContext.email}</p>
+                    <p className="text-sm text-foreground">
+                      {adminContext.email}
+                    </p>
                   </div>
                 ) : null}
                 <Link

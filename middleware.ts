@@ -1,6 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { defaultLocale, hasLocale, locales } from "@/lib/i18n/config";
-import { createMiddlewareSupabaseClient, isSupabaseConfigured } from "@/lib/supabase/middleware";
+import {
+  createMiddlewareSupabaseClient,
+  isSupabaseConfigured,
+} from "@/lib/supabase/middleware";
 
 const PUBLIC_FILE = /\.(.*)$/;
 
@@ -62,7 +65,9 @@ export async function middleware(request: NextRequest) {
   );
 
   if (!pathnameHasLocale) {
-    return NextResponse.redirect(new URL(`/${defaultLocale}${pathname}`, request.url));
+    return NextResponse.redirect(
+      new URL(`/${defaultLocale}${pathname}`, request.url),
+    );
   }
 
   const locale = pathname.split("/")[1];
@@ -71,7 +76,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/${defaultLocale}`, request.url));
   }
 
-  return NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-locale", locale);
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {

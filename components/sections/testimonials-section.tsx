@@ -3,6 +3,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SectionShell } from "@/components/ui/section-shell";
+import { cn } from "@/lib/utils/cn";
 import type { TestimonialItem } from "@/types/domain";
 
 export function TestimonialsSection({
@@ -33,19 +34,39 @@ export function TestimonialsSection({
       </Reveal>
       <div className="mt-12 grid gap-5 lg:grid-cols-3">
         {content.map((item, index) => (
-          <Reveal key={item.id} delay={index * 0.07}>
-            <Card interactive className="flex h-full flex-col p-7">
+          <Reveal
+            key={item.id}
+            delay={index * 0.07}
+            className={cn(index === 0 && "lg:col-span-2")}
+          >
+            <Card
+              interactive
+              className={cn(
+                "flex h-full flex-col rounded-[1.4rem] p-7",
+                index === 0 && "lg:p-9",
+              )}
+            >
               <div className="flex items-center justify-between">
                 <Quote className="h-8 w-8 text-accent" />
                 <span className="text-[0.68rem] uppercase tracking-[0.22em] text-muted">
-                  {isArabic ? "\u0635\u0648\u062a \u0627\u0644\u0639\u0645\u064a\u0644" : "Client voice"}
+                  {isArabic
+                    ? "\u0635\u0648\u062a \u0627\u0644\u0639\u0645\u064a\u0644"
+                    : "Client voice"}
                 </span>
               </div>
-              <p className="balanced-copy mt-6 flex-1 text-[1.02rem] leading-8 text-muted-foreground">
+              <p
+                className={cn(
+                  "balanced-copy mt-6 flex-1 text-[1.02rem] leading-8 text-muted-foreground",
+                  index === 0 && "lg:max-w-3xl lg:text-[1.15rem] lg:leading-9",
+                )}
+              >
                 {item.quote}
               </p>
               {item.rating ? (
-                <div className="mt-6 flex items-center gap-1 text-accent" aria-label={`${item.rating} out of 5`}>
+                <div
+                  className="mt-6 flex items-center gap-1 text-accent"
+                  aria-label={`${item.rating} out of 5`}
+                >
                   {Array.from({ length: item.rating }).map((_, ratingIndex) => (
                     <Star key={ratingIndex} className="h-4 w-4 fill-current" />
                   ))}
