@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { PendingLink } from "@/components/public/pending-link";
 import { publicNavigation } from "@/lib/constants/navigation";
 import type { SiteSettings, SocialLink } from "@/types/domain";
 
@@ -181,19 +182,19 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
               {isArabic ? "جميع الحقوق محفوظة." : "All rights reserved."}
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <Link
+              <PendingLink
                 href={`/${locale}/legal/privacy`}
                 className="transition hover:text-foreground"
               >
                 {isArabic ? "الخصوصية" : "Privacy"}
-              </Link>
+              </PendingLink>
               <span className="text-border">/</span>
-              <Link
+              <PendingLink
                 href={`/${locale}/legal/terms`}
                 className="transition hover:text-foreground"
               >
                 {isArabic ? "الشروط" : "Terms"}
-              </Link>
+              </PendingLink>
               <span className="text-border">/</span>
               <Link
                 href={`/${locale}#hero`}

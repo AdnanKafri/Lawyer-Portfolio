@@ -112,11 +112,17 @@ function mapHero(
   }
 
   const asset = row.hero_asset_id ? assets.get(row.hero_asset_id) : null;
+  const description =
+    /starter hero content|dashboard-driven|platform is connected/i.test(
+      row.description,
+    )
+      ? fallback.description
+      : row.description;
 
   return {
     eyebrow: row.eyebrow,
     title: row.title,
-    description: row.description,
+    description,
     primaryCta: row.primary_cta_label,
     secondaryCta: row.secondary_cta_label,
     trustPoints: parseStringArray(row.trust_points),

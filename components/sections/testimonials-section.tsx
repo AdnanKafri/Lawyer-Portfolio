@@ -32,7 +32,7 @@ export function TestimonialsSection({
           }
         />
       </Reveal>
-      <div className="mt-12 grid gap-5 lg:grid-cols-3">
+      <div className="mt-12 grid items-start gap-5 lg:grid-cols-3">
         {content.map((item, index) => (
           <Reveal
             key={item.id}
@@ -42,7 +42,7 @@ export function TestimonialsSection({
             <Card
               interactive
               className={cn(
-                "flex h-full flex-col rounded-[1.4rem] p-7",
+                "flex flex-col rounded-[1.4rem] p-7",
                 index === 0 && "lg:p-9",
               )}
             >
@@ -56,7 +56,7 @@ export function TestimonialsSection({
               </div>
               <p
                 className={cn(
-                  "balanced-copy mt-6 flex-1 text-[1.02rem] leading-8 text-muted-foreground",
+                  "balanced-copy mt-6 text-[1.02rem] leading-8 text-muted-foreground",
                   index === 0 && "lg:max-w-3xl lg:text-[1.15rem] lg:leading-9",
                 )}
               >

@@ -1,5 +1,6 @@
 import { env } from "@/lib/env";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
+import { validateMediaFile } from "@/lib/validation/media";
 
 function sanitizeFileName(fileName: string) {
   return fileName.toLowerCase().replace(/[^a-z0-9.\-_]/g, "-");
@@ -16,6 +17,12 @@ export async function uploadMediaAsset(input: {
 
   if (!supabase) {
     throw new Error("Supabase service role is not configured.");
+  }
+
+  const validationMessage = validateMediaFile(input.file);
+
+  if (validationMessage) {
+    throw new Error(validationMessage);
   }
 
   const buffer = Buffer.from(await input.file.arrayBuffer());

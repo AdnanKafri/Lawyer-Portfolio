@@ -143,8 +143,8 @@ export function ContactSection({
             ) : null}
             <div className="mt-6 rounded-[1.6rem] border border-dashed border-border bg-white/[0.02] px-5 py-6 text-sm leading-7 text-muted-foreground">
               {isArabic
-                ? "\u0633\u064a\u062a\u0645 \u062d\u0641\u0638 \u0627\u0644\u0637\u0644\u0628\u0627\u062a \u0641\u064a Supabase \u0645\u0639 \u0625\u0645\u0643\u0627\u0646\u064a\u0629 \u0625\u0631\u0633\u0627\u0644 \u0625\u0634\u0639\u0627\u0631 \u0628\u0631\u064a\u062f \u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a \u0639\u0646\u062f \u0627\u0644\u062a\u0647\u064a\u0626\u0629."
-                : "Submissions are prepared to persist in Supabase, with optional email notification when the provider is configured."}
+                ? "تتم مراجعة كل استشارة بسرية واهتمام بطبيعة المسألة ودرجة استعجالها."
+                : "Every inquiry is handled with discretion and reviewed with attention to its facts and urgency."}
             </div>
           </Card>
         </Reveal>

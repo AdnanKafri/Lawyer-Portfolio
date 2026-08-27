@@ -22,7 +22,7 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
 export const metadata: Metadata = createDefaultMetadata({
   title: BRAND_NAME,
   description:
-    "Premium bilingual legal services platform for a modern personal legal brand.",
+    "Premium bilingual legal services for a modern personal legal practice.",
   path: "/",
 });
 

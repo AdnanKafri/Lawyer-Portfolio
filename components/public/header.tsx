@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { PendingLink } from "@/components/public/pending-link";
 import { publicNavigation } from "@/lib/constants/navigation";
 import { getDirection, swapLocale } from "@/lib/i18n/config";
 import { cn } from "@/lib/utils/cn";
@@ -102,18 +103,18 @@ export function Header({
               ))}
             </nav>
             <div className="flex items-center gap-2">
-              <Link
+              <PendingLink
                 href={`/${nextLocale}`}
                 className="rounded-full px-3 py-2 text-[0.68rem] uppercase tracking-[0.24em] text-muted-foreground transition hover:bg-white/[0.04] hover:text-foreground"
               >
                 {nextLocale.toUpperCase()}
-              </Link>
-              <Link
+              </PendingLink>
+              <PendingLink
                 href="/admin/login"
                 className="hidden rounded-full border border-border bg-white/[0.03] px-4 py-2 text-[0.68rem] uppercase tracking-[0.24em] text-foreground transition hover:border-accent hover:text-accent sm:block"
               >
                 Admin
-              </Link>
+              </PendingLink>
               <button
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-white/[0.03] text-muted-foreground lg:hidden"
                 aria-label={isOpen ? "Close navigation" : "Open navigation"}
@@ -153,13 +154,13 @@ export function Header({
                       {item.label}
                     </Link>
                   ))}
-                  <Link
+                  <PendingLink
                     href="/admin/login"
                     onClick={() => setIsOpen(false)}
                     className="rounded-xl px-4 py-3 text-sm text-muted-foreground hover:bg-white/[0.04] hover:text-foreground"
                   >
                     Admin
-                  </Link>
+                  </PendingLink>
                 </nav>
               </motion.div>
             ) : null}

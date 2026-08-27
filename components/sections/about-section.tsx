@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Reveal } from "@/components/motion/reveal";
+import { PublicMedia } from "@/components/public/public-media";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SectionShell } from "@/components/ui/section-shell";
@@ -16,9 +16,9 @@ export function AboutSection({
 
   return (
     <SectionShell id="about">
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+      <div className="grid items-start gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <Reveal>
-          <Card className="h-full rounded-[1.4rem] bg-[linear-gradient(180deg,rgba(193,161,103,0.12),rgba(255,255,255,0.02))] p-7 md:p-8">
+          <Card className="rounded-[1.4rem] bg-[linear-gradient(180deg,rgba(193,161,103,0.12),rgba(255,255,255,0.02))] p-7 md:p-8">
             <p className="eyebrow mb-8">
               {isArabic
                 ? "\u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u0645\u0647\u0646\u064a"
@@ -28,11 +28,12 @@ export function AboutSection({
               <div className="relative overflow-hidden rounded-[1.7rem] border border-border bg-black/18">
                 <div className="relative aspect-[4/3] w-full">
                   {content.imageUrl ? (
-                    <Image
+                    <PublicMedia
                       src={content.imageUrl}
                       alt={content.imageAlt ?? content.title}
-                      fill
+                      sizes="(max-width: 1023px) 100vw, 34vw"
                       className="object-cover"
+                      fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]"
                     />
                   ) : (
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]" />
@@ -82,7 +83,7 @@ export function AboutSection({
                 <Reveal key={credential.id} delay={0.12 + index * 0.05}>
                   <Card
                     interactive
-                    className="h-full rounded-none border-x-0 border-b-0 border-t border-border/80 bg-transparent p-6 shadow-none before:hidden hover:bg-white/[0.025] hover:shadow-none"
+                    className="rounded-none border-x-0 border-b-0 border-t border-border/80 bg-transparent p-6 shadow-none before:hidden hover:bg-white/[0.025] hover:shadow-none"
                   >
                     <p className="eyebrow mb-4">
                       {isArabic

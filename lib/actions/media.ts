@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import type { FormActionState } from "@/lib/actions/form-state";
 import { requireAdminContext } from "@/lib/domain/admin";
 import { uploadMediaAsset } from "@/lib/domain/media";
+import { validateMediaFile } from "@/lib/validation/media";
 
 export async function uploadMediaAction(
   _previousState: FormActionState,
@@ -21,11 +22,21 @@ export async function uploadMediaAction(
     };
   }
 
+  const validationMessage = validateMediaFile(file);
+
+  if (validationMessage) {
+    return {
+      status: "error",
+      message: validationMessage,
+    };
+  }
+
   try {
     await uploadMediaAsset({
       organizationId: adminContext.adminUser.organization_id,
       adminUserId: adminContext.adminUser.id,
-      locale: localeValue === "en" || localeValue === "ar" ? localeValue : undefined,
+      locale:
+        localeValue === "en" || localeValue === "ar" ? localeValue : undefined,
       file,
       altText,
     });
@@ -39,8 +50,7 @@ export async function uploadMediaAction(
   } catch (error) {
     return {
       status: "error",
-      message:
-        error instanceof Error ? error.message : "Media upload failed.",
+      message: error instanceof Error ? error.message : "Media upload failed.",
     };
   }
 }

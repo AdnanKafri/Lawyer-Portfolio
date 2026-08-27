@@ -10,7 +10,7 @@ export default function NotFound() {
         Page not found
       </h1>
       <p className="mb-8 max-w-xl text-muted-foreground">
-        The route does not exist in the current platform structure.
+        The page you requested is unavailable or may have moved.
       </p>
       <Link
         href="/en"

@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BadgeCheck } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { PublicMedia } from "@/components/public/public-media";
 import { Card } from "@/components/ui/card";
 import { SectionShell } from "@/components/ui/section-shell";
 import { cn } from "@/lib/utils/cn";
@@ -29,7 +29,7 @@ export function HeroSection({
         )}
       >
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(193,161,103,0.11),transparent_26%),radial-gradient(circle_at_88%_16%,rgba(255,255,255,0.04),transparent_22%),linear-gradient(180deg,rgba(255,255,255,0.015),transparent)]" />
-        <div className="relative grid gap-4 lg:grid-cols-[minmax(0,0.96fr)_minmax(360px,0.84fr)] lg:gap-8">
+        <div className="relative grid items-start gap-4 lg:grid-cols-[minmax(0,0.96fr)_minmax(360px,0.84fr)] lg:gap-8">
           <Reveal
             className={cn("min-w-0", isArabic ? "lg:order-2" : "lg:order-1")}
           >
@@ -128,17 +128,18 @@ export function HeroSection({
             delay={0.08}
             className={cn(isArabic ? "lg:order-1" : "lg:order-2")}
           >
-            <Card className="relative h-full overflow-hidden rounded-[1.2rem] border-border bg-black/16 p-0">
+            <Card className="relative overflow-hidden rounded-[1.2rem] border-border bg-black/16 p-0">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-              <div className="relative h-full">
-                <div className="relative aspect-[4/4.9] min-h-[420px] w-full lg:min-h-[620px]">
+              <div className="relative">
+                <div className="relative aspect-[4/4.9] w-full">
                   {content.imageUrl ? (
-                    <Image
+                    <PublicMedia
                       src={content.imageUrl}
                       alt={content.imageAlt ?? content.title}
-                      fill
                       priority
+                      sizes="(max-width: 1023px) 100vw, 42vw"
                       className="object-cover object-[50%_18%]"
+                      fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]"
                     />
                   ) : (
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]" />

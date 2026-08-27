@@ -6,7 +6,10 @@ import { ServicesSection } from "@/components/sections/services-section";
 import { StatsSection } from "@/components/sections/stats-section";
 import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { StructuredData } from "@/components/structured-data";
-import { getPublicSiteContent, getPublicSiteSettings } from "@/lib/domain/content";
+import {
+  getPublicSiteContent,
+  getPublicSiteSettings,
+} from "@/lib/domain/content";
 import { getSeoMetadataForPage } from "@/lib/domain/seo";
 import { createLocaleMetadata } from "@/lib/seo/metadata";
 import { buildAttorneySchemas } from "@/lib/seo/schema";
@@ -30,12 +33,12 @@ export async function generateMetadata({ params }: LocalePageProps) {
       seo?.meta_title ??
       (locale === "ar"
         ? "\u0627\u0644\u0645\u0644\u0641 \u0627\u0644\u062a\u0639\u0631\u064a\u0641\u064a \u0644\u0644\u0645\u062d\u0627\u0645\u064a"
-        : "Lawyer Portfolio Platform"),
+        : "Commercial legal counsel"),
     description:
       seo?.meta_description ??
       (locale === "ar"
         ? "\u0645\u0646\u0635\u0629 \u0627\u062d\u062a\u0631\u0627\u0641\u064a\u0629 \u062b\u0646\u0627\u0626\u064a\u0629 \u0627\u0644\u0644\u063a\u0629 \u0644\u0639\u0631\u0636 \u0627\u0644\u062e\u062f\u0645\u0627\u062a \u0627\u0644\u0642\u0627\u0646\u0648\u0646\u064a\u0629 \u0648\u0625\u062f\u0627\u0631\u0629 \u0627\u0644\u0645\u062d\u062a\u0648\u0649."
-        : "A premium bilingual platform for legal services, authority, and trust."),
+        : "A premium bilingual legal practice for businesses and private clients."),
     path: `/${locale}`,
   });
 }
@@ -47,7 +50,11 @@ export default async function LocaleHomePage({ params }: LocalePageProps) {
     getPublicSiteContent(normalizedLocale),
     getPublicSiteSettings(),
   ]);
-  const schema = buildAttorneySchemas(locale, content, settings.siteSettings.siteName);
+  const schema = buildAttorneySchemas(
+    locale,
+    content,
+    settings.siteSettings.siteName,
+  );
 
   return (
     <>
