@@ -7,12 +7,18 @@ import {
   cancelMediaUpload,
   completeMediaUpload,
   createMediaUploadTarget,
+  deleteMediaAsset,
+  type MediaUsage,
   type MediaUploadTarget,
 } from "@/lib/domain/media";
 import { validateMediaMetadata } from "@/lib/validation/media";
 
 export type MediaUploadActionState = FormActionState & {
   target?: MediaUploadTarget;
+};
+
+export type MediaDeleteActionState = FormActionState & {
+  usages?: MediaUsage[];
 };
 
 export async function createMediaUploadTargetAction(
@@ -117,4 +123,64 @@ export async function cancelMediaUploadAction(path: string) {
     organizationId: adminContext.adminUser.organization_id,
     path,
   });
+}
+
+export async function deleteMediaAssetAction(
+  _previousState: MediaDeleteActionState,
+  formData: FormData,
+): Promise<MediaDeleteActionState> {
+  const adminContext = await requireAdminContext();
+  const assetId = String(formData.get("assetId") ?? "").trim();
+  const confirmed = formData.get("confirmed") === "true";
+
+  if (!assetId || !confirmed) {
+    return {
+      status: "error",
+      message: "Confirmation is required before deleting media.",
+    };
+  }
+
+  try {
+    const result = await deleteMediaAsset({
+      organizationId: adminContext.adminUser.organization_id,
+      assetId,
+      confirmed,
+    });
+
+    if (!result.deleted) {
+      return {
+        status: "error",
+        message:
+          result.usages.length > 0
+            ? `This media is currently used in: ${result.usages.map((usage) => usage.label).join(", ")}.`
+            : "Confirmation is required before deleting media.",
+        usages: result.usages,
+      };
+    }
+
+    for (const path of [
+      "/en",
+      "/ar",
+      "/admin",
+      "/admin/media",
+      "/admin/content/hero",
+      "/admin/content/about",
+      "/admin/seo",
+      "/admin/settings",
+    ]) {
+      revalidatePath(path);
+    }
+
+    return {
+      status: "success",
+      message: "Media deleted successfully.",
+      usages: result.usages,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message:
+        error instanceof Error ? error.message : "Media deletion failed.",
+    };
+  }
 }

@@ -41,6 +41,7 @@ export function Footer({ locale, siteSettings, socialLinks }: FooterProps) {
                       alt={siteSettings.siteName}
                       width={48}
                       height={48}
+                      unoptimized
                       className="h-full w-full object-cover"
                     />
                   ) : (

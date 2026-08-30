@@ -4,7 +4,6 @@ import { FaqSection } from "@/components/sections/faq-section";
 import { HeroSection } from "@/components/sections/hero-section";
 import { ServicesSection } from "@/components/sections/services-section";
 import { StatsSection } from "@/components/sections/stats-section";
-import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { StructuredData } from "@/components/structured-data";
 import {
   getPublicSiteContent,
@@ -63,7 +62,6 @@ export default async function LocaleHomePage({ params }: LocalePageProps) {
       <ServicesSection locale={locale} content={content.services} />
       <AboutSection locale={locale} content={content.about} />
       <StatsSection content={content.statistics} />
-      <TestimonialsSection locale={locale} content={content.testimonials} />
       <FaqSection locale={locale} content={content.faqs} />
       <ContactSection locale={locale} content={content.contact} />
     </>

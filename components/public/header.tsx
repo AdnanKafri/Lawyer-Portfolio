@@ -73,6 +73,7 @@ export function Header({
                     alt={siteSettings.siteName}
                     width={44}
                     height={44}
+                    unoptimized
                     className="h-full w-full object-cover"
                   />
                 ) : (

@@ -15,6 +15,8 @@ export function HeroSection({
   content: HeroContent;
 }) {
   const isArabic = locale === "ar";
+  const featuredPanel = content.previewPanels[0];
+  const supportingPanels = content.previewPanels.slice(1, 3);
 
   return (
     <SectionShell
@@ -145,34 +147,64 @@ export function HeroSection({
                     fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]"
                   />
                 ) : (
-                  <div className="aspect-[4/4.9] w-full bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]" />
-                )}
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,5,8,0.04),rgba(4,5,8,0.5)_52%,rgba(4,5,8,0.88))]" />
-
-                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                  <div className="rounded-[1.5rem] border border-white/10 bg-black/36 p-4 backdrop-blur-xl sm:p-5">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-[0.66rem] uppercase tracking-[0.24em] text-white/60">
-                          {isArabic ? "مجال الممارسة" : "Practice focus"}
-                        </p>
-                        <p className="mt-1 text-lg font-semibold text-white">
-                          {isArabic
-                            ? "العقود والنزاعات التجارية"
-                            : "Contracts and commercial disputes"}
-                        </p>
-                      </div>
-                      <span className="rounded-full border border-white/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-white/78">
-                        {isArabic ? "دبي" : "Dubai"}
-                      </span>
+                  <div className="grid gap-10 p-6 sm:p-8 lg:p-10">
+                    <div className="space-y-5">
+                      <p className="eyebrow">
+                        {isArabic ? "مجال الممارسة" : "Practice focus"}
+                      </p>
+                      <h2 className="text-heading max-w-md text-3xl font-semibold text-foreground sm:text-4xl">
+                        {featuredPanel?.title ?? content.title}
+                      </h2>
+                      <p className="max-w-md text-sm leading-8 text-muted-foreground">
+                        {featuredPanel?.description ?? content.description}
+                      </p>
                     </div>
-                    <p className="mt-3 text-sm leading-7 text-white/72">
-                      {isArabic
-                        ? "تمثيل قانوني هادئ في الملفات الحساسة، مع وضوح مهني يحترم القرار وسمعة العميل."
-                        : "Calm legal representation for sensitive matters, with practical judgment and professional discretion."}
-                    </p>
+                    {supportingPanels.length > 0 ? (
+                      <div className="grid gap-4 border-t border-border pt-5 sm:grid-cols-2">
+                        {supportingPanels.map((panel) => (
+                          <div key={panel.title} className="space-y-2">
+                            <p className="text-sm font-semibold text-foreground">
+                              {panel.title}
+                            </p>
+                            <p className="text-sm leading-7 text-muted-foreground">
+                              {panel.description}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
-                </div>
+                )}
+                {content.imageUrl ? (
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,5,8,0.04),rgba(4,5,8,0.5)_52%,rgba(4,5,8,0.88))]" />
+                ) : null}
+
+                {content.imageUrl ? (
+                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                    <div className="rounded-[1.5rem] border border-white/10 bg-black/36 p-4 backdrop-blur-xl sm:p-5">
+                      <div className="flex items-center justify-between gap-4">
+                        <div>
+                          <p className="text-[0.66rem] uppercase tracking-[0.24em] text-white/60">
+                            {isArabic ? "مجال الممارسة" : "Practice focus"}
+                          </p>
+                          <p className="mt-1 text-lg font-semibold text-white">
+                            {isArabic
+                              ? "العقود والنزاعات التجارية"
+                              : "Contracts and commercial disputes"}
+                          </p>
+                        </div>
+                        <span className="rounded-full border border-white/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-white/78">
+                          {isArabic ? "دبي" : "Dubai"}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-sm leading-7 text-white/72">
+                        {isArabic
+                          ? "تمثيل قانوني هادئ في الملفات الحساسة، مع وضوح مهني يحترم القرار وسمعة العميل."
+                          : "Calm legal representation for sensitive matters, with practical judgment and professional discretion."}
+                      </p>
+                    </div>
+                  </div>
+                ) : null}
               </div>
             </Card>
           </Reveal>

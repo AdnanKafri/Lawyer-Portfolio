@@ -44,7 +44,17 @@ export function AboutSection({
                     fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]"
                   />
                 ) : (
-                  <div className="aspect-[4/3] w-full bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]" />
+                  <div className="grid gap-5 p-6 sm:p-8">
+                    <p className="eyebrow">
+                      {isArabic ? "الملف المهني" : "Professional profile"}
+                    </p>
+                    <p className="text-heading max-w-md text-3xl font-semibold text-foreground">
+                      {content.title}
+                    </p>
+                    <p className="max-w-md text-sm leading-8 text-muted-foreground">
+                      {content.summary}
+                    </p>
+                  </div>
                 )}
                 <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(4,5,8,0.06),rgba(4,5,8,0.5))]" />
               </div>
@@ -87,10 +97,14 @@ export function AboutSection({
             ) : null}
             <div className={cn("mt-10 grid gap-4", credentialClassName)}>
               {content.credentials.map((credential, index) => (
-                <Reveal key={credential.id} delay={0.12 + index * 0.05}>
+                <Reveal
+                  key={credential.id}
+                  delay={0.12 + index * 0.05}
+                  className="h-full"
+                >
                   <Card
                     interactive
-                    className="rounded-none border-x-0 border-b-0 border-t border-border/80 bg-transparent p-6 shadow-none before:hidden hover:bg-white/[0.025] hover:shadow-none"
+                    className="flex h-full flex-col rounded-none border-x-0 border-b-0 border-t border-border/80 bg-transparent p-6 shadow-none before:hidden hover:bg-white/[0.025] hover:shadow-none"
                   >
                     <p className="eyebrow mb-4">
                       {isArabic
@@ -100,7 +114,7 @@ export function AboutSection({
                     <p className="text-heading text-xl font-semibold text-foreground">
                       {credential.title}
                     </p>
-                    <p className="balanced-copy mt-3 text-sm leading-8 text-muted-foreground">
+                    <p className="balanced-copy mt-3 flex-1 text-sm leading-8 text-muted-foreground">
                       {credential.description}
                     </p>
                   </Card>

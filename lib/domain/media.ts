@@ -1,5 +1,6 @@
 import { env } from "@/lib/env";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
+import type { Database } from "@/types/supabase";
 import {
   MAX_MEDIA_UPLOAD_BYTES,
   validateMediaMetadata,
@@ -16,6 +17,19 @@ export type MediaUploadTarget = {
   path: string;
   token: string;
 };
+
+export type MediaUsage = {
+  label: string;
+};
+
+export type MediaAsset = Database["public"]["Tables"]["media_assets"]["Row"] & {
+  publicUrl: string;
+  usages: MediaUsage[];
+};
+
+type ServiceClient = NonNullable<
+  ReturnType<typeof createSupabaseServiceClient>
+>;
 
 function assertMediaMetadata(input: MediaFileMetadata) {
   const validationMessage = validateMediaMetadata(input);
@@ -143,7 +157,195 @@ export async function cancelMediaUpload(input: {
   await supabase.storage.from(env.SUPABASE_MEDIA_BUCKET).remove([input.path]);
 }
 
-export async function listMediaAssets(organizationId: string) {
+async function getMediaUsageMap(
+  supabase: ServiceClient,
+  organizationId: string,
+  assetIds: string[],
+) {
+  const usagesByAsset = new Map<string, MediaUsage[]>();
+
+  if (assetIds.length === 0) {
+    return usagesByAsset;
+  }
+
+  const [heroResult, aboutResult, seoResult, siteSettingsResult] =
+    await Promise.all([
+      supabase
+        .from("hero_sections")
+        .select("hero_asset_id,locale")
+        .eq("organization_id", organizationId)
+        .in("hero_asset_id", assetIds),
+      supabase
+        .from("about_sections")
+        .select("profile_asset_id,locale")
+        .eq("organization_id", organizationId)
+        .in("profile_asset_id", assetIds),
+      supabase
+        .from("seo_settings")
+        .select("og_image_asset_id,locale")
+        .eq("organization_id", organizationId)
+        .in("og_image_asset_id", assetIds),
+      supabase
+        .from("site_settings")
+        .select("logo_asset_id,favicon_asset_id")
+        .eq("organization_id", organizationId)
+        .maybeSingle(),
+    ]);
+
+  if (
+    heroResult.error ||
+    aboutResult.error ||
+    seoResult.error ||
+    siteSettingsResult.error
+  ) {
+    throw new Error("Unable to determine media usage.");
+  }
+
+  const addUsage = (assetId: string | null, label: string) => {
+    if (!assetId) {
+      return;
+    }
+
+    const usages = usagesByAsset.get(assetId) ?? [];
+    usages.push({ label });
+    usagesByAsset.set(assetId, usages);
+  };
+
+  for (const row of heroResult.data ?? []) {
+    addUsage(
+      row.hero_asset_id,
+      `Hero (${row.locale === "ar" ? "Arabic" : "English"})`,
+    );
+  }
+
+  for (const row of aboutResult.data ?? []) {
+    addUsage(
+      row.profile_asset_id,
+      `About/Profile (${row.locale === "ar" ? "Arabic" : "English"})`,
+    );
+  }
+
+  for (const row of seoResult.data ?? []) {
+    addUsage(
+      row.og_image_asset_id,
+      `SEO Open Graph (${row.locale === "ar" ? "Arabic" : "English"})`,
+    );
+  }
+
+  if (siteSettingsResult.data) {
+    addUsage(siteSettingsResult.data.logo_asset_id, "Brand logo");
+    addUsage(siteSettingsResult.data.favicon_asset_id, "Brand favicon");
+  }
+
+  return usagesByAsset;
+}
+
+async function clearMediaAssetReferences(
+  supabase: ServiceClient,
+  organizationId: string,
+  assetId: string,
+) {
+  const referenceUpdates = [
+    supabase
+      .from("hero_sections")
+      .update({ hero_asset_id: null })
+      .eq("organization_id", organizationId)
+      .eq("hero_asset_id", assetId),
+    supabase
+      .from("about_sections")
+      .update({ profile_asset_id: null })
+      .eq("organization_id", organizationId)
+      .eq("profile_asset_id", assetId),
+    supabase
+      .from("seo_settings")
+      .update({ og_image_asset_id: null })
+      .eq("organization_id", organizationId)
+      .eq("og_image_asset_id", assetId),
+    supabase
+      .from("site_settings")
+      .update({ logo_asset_id: null })
+      .eq("organization_id", organizationId)
+      .eq("logo_asset_id", assetId),
+    supabase
+      .from("site_settings")
+      .update({ favicon_asset_id: null })
+      .eq("organization_id", organizationId)
+      .eq("favicon_asset_id", assetId),
+  ];
+
+  const results = await Promise.all(referenceUpdates);
+  const failed = results.find((result) => result.error);
+
+  if (failed?.error) {
+    throw new Error(failed.error.message);
+  }
+}
+
+export async function deleteMediaAsset(input: {
+  organizationId: string;
+  assetId: string;
+  confirmed: boolean;
+}) {
+  const supabase = createSupabaseServiceClient();
+
+  if (!supabase) {
+    throw new Error("Supabase service role is not configured.");
+  }
+
+  const { data: asset, error: assetError } = await supabase
+    .from("media_assets")
+    .select("*")
+    .eq("id", input.assetId)
+    .eq("organization_id", input.organizationId)
+    .maybeSingle();
+
+  if (assetError) {
+    throw new Error(assetError.message);
+  }
+
+  if (!asset) {
+    throw new Error("Media asset not found.");
+  }
+
+  const usageMap = await getMediaUsageMap(supabase, input.organizationId, [
+    input.assetId,
+  ]);
+  const usages = usageMap.get(input.assetId) ?? [];
+
+  if (!input.confirmed) {
+    return { deleted: false, usages };
+  }
+
+  await clearMediaAssetReferences(
+    supabase,
+    input.organizationId,
+    input.assetId,
+  );
+
+  const { error: storageError } = await supabase.storage
+    .from(asset.bucket)
+    .remove([asset.path]);
+
+  if (storageError) {
+    throw new Error(storageError.message);
+  }
+
+  const { error: deleteError } = await supabase
+    .from("media_assets")
+    .delete()
+    .eq("id", input.assetId)
+    .eq("organization_id", input.organizationId);
+
+  if (deleteError) {
+    throw new Error(deleteError.message);
+  }
+
+  return { deleted: true, usages };
+}
+
+export async function listMediaAssets(
+  organizationId: string,
+): Promise<MediaAsset[]> {
   const supabase = createSupabaseServiceClient();
 
   if (!supabase) {
@@ -161,6 +363,12 @@ export async function listMediaAssets(organizationId: string) {
     return [];
   }
 
+  const usagesByAsset = await getMediaUsageMap(
+    supabase,
+    organizationId,
+    data.map((asset) => asset.id),
+  );
+
   return data.map((asset) => {
     const {
       data: { publicUrl },
@@ -169,6 +377,7 @@ export async function listMediaAssets(organizationId: string) {
     return {
       ...asset,
       publicUrl,
+      usages: usagesByAsset.get(asset.id) ?? [],
     };
   });
 }

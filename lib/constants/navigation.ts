@@ -21,8 +21,11 @@ export function publicNavigation(locale: string) {
     { href: `/${locale}#hero`, label: isArabic ? "الرئيسية" : "Home" },
     { href: `/${locale}#services`, label: isArabic ? "الخدمات" : "Services" },
     { href: `/${locale}#about`, label: isArabic ? "نبذة" : "About" },
-    { href: `/${locale}#testimonials`, label: isArabic ? "الآراء" : "Testimonials" },
+    {
+      href: `/${locale}#testimonials`,
+      label: isArabic ? "الآراء" : "Testimonials",
+    },
     { href: `/${locale}#faq`, label: isArabic ? "الأسئلة" : "FAQ" },
     { href: `/${locale}#contact`, label: isArabic ? "التواصل" : "Contact" },
-  ];
+  ].filter((item) => !item.href.endsWith("#testimonials"));
 }

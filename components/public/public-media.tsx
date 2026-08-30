@@ -66,6 +66,7 @@ export function PublicMedia({
         alt={alt}
         fill
         priority={priority}
+        unoptimized
         sizes={sizes}
         className={className}
         onLoad={(event) =>
