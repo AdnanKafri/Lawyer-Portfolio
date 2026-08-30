@@ -14,10 +14,16 @@ export function TestimonialsSection({
   content: TestimonialItem[];
 }) {
   const isArabic = locale === "ar";
+  const collectionClassName =
+    content.length === 1
+      ? "mx-auto max-w-3xl grid-cols-1"
+      : content.length === 2
+        ? "mx-auto max-w-5xl md:grid-cols-2"
+        : "max-w-6xl md:grid-cols-2 xl:grid-cols-3";
 
   return (
     <SectionShell id="testimonials">
-      <Reveal className="section-frame">
+      <Reveal className="section-frame mx-auto text-center">
         <SectionHeading
           eyebrow={isArabic ? "\u0627\u0644\u062b\u0642\u0629" : "Trust"}
           title={
@@ -30,20 +36,17 @@ export function TestimonialsSection({
               ? "تجارب العملاء هنا تركز على الوضوح، والسرية، وسرعة الاستجابة، وهي العناصر التي تهم عند اختيار ممثل قانوني."
               : "These testimonials emphasize clarity, discretion, and responsiveness - the qualities that matter when choosing legal representation."
           }
+          align="center"
         />
       </Reveal>
-      <div className="mt-12 grid items-start gap-5 lg:grid-cols-3">
+      <div className={cn("mt-12 grid items-start gap-5", collectionClassName)}>
         {content.map((item, index) => (
-          <Reveal
-            key={item.id}
-            delay={index * 0.07}
-            className={cn(index === 0 && "lg:col-span-2")}
-          >
+          <Reveal key={item.id} delay={index * 0.07}>
             <Card
               interactive
               className={cn(
                 "flex flex-col rounded-[1.4rem] p-7",
-                index === 0 && "lg:p-9",
+                index === 0 && "border-s-2 border-s-accent/70 lg:p-9",
               )}
             >
               <div className="flex items-center justify-between">

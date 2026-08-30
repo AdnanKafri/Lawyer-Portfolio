@@ -1,13 +1,23 @@
 import { Reveal } from "@/components/motion/reveal";
 import { Card } from "@/components/ui/card";
 import { SectionShell } from "@/components/ui/section-shell";
+import { cn } from "@/lib/utils/cn";
 import type { StatisticItem } from "@/types/domain";
 
 export function StatsSection({ content }: { content: StatisticItem[] }) {
+  const collectionClassName =
+    content.length === 1
+      ? "mx-auto max-w-xl grid-cols-1"
+      : content.length === 2
+        ? "mx-auto max-w-3xl md:grid-cols-2"
+        : content.length === 3
+          ? "mx-auto max-w-5xl md:grid-cols-3"
+          : "md:grid-cols-2 xl:grid-cols-4";
+
   return (
     <SectionShell id="statistics" className="pt-0">
       <div className="border-y border-border py-5 md:py-6">
-        <div className="grid items-start gap-0 md:grid-cols-2 xl:grid-cols-4">
+        <div className={cn("grid items-start gap-0", collectionClassName)}>
           {content.map((item, index) => (
             <Reveal key={item.id} delay={index * 0.05}>
               <Card

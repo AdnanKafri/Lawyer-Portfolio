@@ -35,7 +35,7 @@ export function HeroSection({
           >
             <div
               className={cn(
-                "flex h-full flex-col justify-center px-4 py-5 sm:px-6 sm:py-6 md:px-8 lg:px-10 lg:py-8",
+                "flex flex-col justify-center px-4 py-5 sm:px-6 sm:py-6 md:px-8 lg:px-10 lg:py-8",
                 isArabic && "text-right",
               )}
             >
@@ -130,45 +130,47 @@ export function HeroSection({
           >
             <Card className="relative overflow-hidden rounded-[1.2rem] border-border bg-black/16 p-0">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-              <div className="relative">
-                <div className="relative aspect-[4/4.9] w-full">
-                  {content.imageUrl ? (
-                    <PublicMedia
-                      src={content.imageUrl}
-                      alt={content.imageAlt ?? content.title}
-                      priority
-                      sizes="(max-width: 1023px) 100vw, 42vw"
-                      className="object-cover object-[50%_18%]"
-                      fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]" />
-                  )}
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,5,8,0.04),rgba(4,5,8,0.5)_52%,rgba(4,5,8,0.88))]" />
+              <div className="relative w-full">
+                {content.imageUrl ? (
+                  <PublicMedia
+                    src={content.imageUrl}
+                    alt={content.imageAlt ?? content.title}
+                    priority
+                    sizes="(max-width: 1023px) 100vw, 42vw"
+                    aspectRatio={0.86}
+                    minAspectRatio={0.78}
+                    maxAspectRatio={1.12}
+                    className="object-contain object-top"
+                    containerClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]"
+                    fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]"
+                  />
+                ) : (
+                  <div className="aspect-[4/4.9] w-full bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.22),transparent_34%),linear-gradient(180deg,rgba(7,9,13,0.75),rgba(7,9,13,0.96))]" />
+                )}
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,5,8,0.04),rgba(4,5,8,0.5)_52%,rgba(4,5,8,0.88))]" />
 
-                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                    <div className="rounded-[1.8rem] border border-white/10 bg-black/36 p-4 backdrop-blur-xl sm:p-5">
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <p className="text-[0.66rem] uppercase tracking-[0.24em] text-white/60">
-                            {isArabic ? "مجال الممارسة" : "Practice focus"}
-                          </p>
-                          <p className="mt-1 text-lg font-semibold text-white">
-                            {isArabic
-                              ? "العقود والنزاعات التجارية"
-                              : "Contracts and commercial disputes"}
-                          </p>
-                        </div>
-                        <span className="rounded-full border border-white/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-white/78">
-                          {isArabic ? "دبي" : "Dubai"}
-                        </span>
+                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                  <div className="rounded-[1.5rem] border border-white/10 bg-black/36 p-4 backdrop-blur-xl sm:p-5">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-[0.66rem] uppercase tracking-[0.24em] text-white/60">
+                          {isArabic ? "مجال الممارسة" : "Practice focus"}
+                        </p>
+                        <p className="mt-1 text-lg font-semibold text-white">
+                          {isArabic
+                            ? "العقود والنزاعات التجارية"
+                            : "Contracts and commercial disputes"}
+                        </p>
                       </div>
-                      <p className="mt-3 text-sm leading-7 text-white/72">
-                        {isArabic
-                          ? "تمثيل قانوني هادئ في الملفات الحساسة، مع وضوح مهني يحترم القرار وسمعة العميل."
-                          : "Calm legal representation for sensitive matters, with practical judgment and professional discretion."}
-                      </p>
+                      <span className="rounded-full border border-white/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-white/78">
+                        {isArabic ? "دبي" : "Dubai"}
+                      </span>
                     </div>
+                    <p className="mt-3 text-sm leading-7 text-white/72">
+                      {isArabic
+                        ? "تمثيل قانوني هادئ في الملفات الحساسة، مع وضوح مهني يحترم القرار وسمعة العميل."
+                        : "Calm legal representation for sensitive matters, with practical judgment and professional discretion."}
+                    </p>
                   </div>
                 </div>
               </div>

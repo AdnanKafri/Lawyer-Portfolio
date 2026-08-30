@@ -1,43 +1,146 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { uploadMediaAction } from "@/lib/actions/media";
+import {
+  cancelMediaUploadAction,
+  completeMediaUploadAction,
+  createMediaUploadTargetAction,
+} from "@/lib/actions/media";
 import { defaultFormActionState } from "@/lib/actions/form-state";
 import { FormSelect } from "@/components/admin/form-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   MAX_MEDIA_UPLOAD_BYTES,
   validateMediaFile,
 } from "@/lib/validation/media";
 
 export function MediaUploadForm() {
-  const [state, formAction, isPending] = useActionState(
-    uploadMediaAction,
-    defaultFormActionState,
-  );
-  const formRef = useRef<HTMLFormElement>(null);
-  const [selectKey, setSelectKey] = useState(0);
+  const [isPending, setIsPending] = useState(false);
+  const [progressMessage, setProgressMessage] = useState("");
   const [fileError, setFileError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (state.status === "success") {
-      toast.success(state.message);
-      formRef.current?.reset();
-      setSelectKey((current) => current + 1);
-      setFileError(null);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isPending) {
+      return;
     }
 
-    if (state.status === "error") {
-      toast.error(state.message);
+    const form = event.currentTarget;
+    const fileInput = form.elements.namedItem("file");
+    const file =
+      fileInput instanceof HTMLInputElement ? fileInput.files?.[0] : undefined;
+    const validationMessage = file
+      ? validateMediaFile(file)
+      : "Please select a file to upload.";
+
+    if (validationMessage) {
+      setFileError(validationMessage);
+      return;
     }
-  }, [state]);
+
+    const supabase = createSupabaseBrowserClient();
+
+    if (!supabase || !file) {
+      setFileError("Media storage is not configured.");
+      return;
+    }
+
+    setFileError(null);
+    setIsPending(true);
+    setProgressMessage("Preparing secure upload...");
+
+    try {
+      const targetFormData = new FormData();
+      targetFormData.set("fileName", file.name);
+      targetFormData.set("mimeType", file.type);
+      targetFormData.set("sizeBytes", String(file.size));
+
+      const targetResult = await createMediaUploadTargetAction(
+        defaultFormActionState,
+        targetFormData,
+      );
+
+      if (targetResult.status === "error" || !targetResult.target) {
+        throw new Error(
+          targetResult.message || "Unable to prepare the media upload.",
+        );
+      }
+
+      setProgressMessage("Uploading image...");
+      const { error: uploadError } = await supabase.storage
+        .from(targetResult.target.bucket)
+        .uploadToSignedUrl(
+          targetResult.target.path,
+          targetResult.target.token,
+          file,
+          {
+            cacheControl: "3600",
+            contentType: file.type,
+            upsert: false,
+          },
+        );
+
+      if (uploadError) {
+        try {
+          await cancelMediaUploadAction(targetResult.target.path);
+        } catch {
+          // The upload error is more useful to the admin than cleanup failure.
+        }
+
+        throw new Error(uploadError.message);
+      }
+
+      setProgressMessage("Saving media details...");
+      const sourceFormData = new FormData(form);
+      const completeFormData = new FormData();
+      completeFormData.set("path", targetResult.target.path);
+      completeFormData.set("fileName", file.name);
+      completeFormData.set("mimeType", file.type);
+      completeFormData.set("sizeBytes", String(file.size));
+      completeFormData.set(
+        "locale",
+        String(sourceFormData.get("locale") ?? ""),
+      );
+      completeFormData.set(
+        "altText",
+        String(sourceFormData.get("altText") ?? ""),
+      );
+
+      const completeResult = await completeMediaUploadAction(
+        defaultFormActionState,
+        completeFormData,
+      );
+
+      if (completeResult.status === "error") {
+        try {
+          await cancelMediaUploadAction(targetResult.target.path);
+        } catch {
+          // The completion error is more useful to the admin than cleanup failure.
+        }
+
+        throw new Error(completeResult.message || "Media upload failed.");
+      }
+
+      toast.success(completeResult.message);
+      form.reset();
+      setProgressMessage("");
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Media upload failed.";
+      setProgressMessage("");
+      toast.error(message);
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <form
-      ref={formRef}
-      action={formAction}
+      onSubmit={handleSubmit}
       className="grid gap-4 md:grid-cols-[1fr_200px]"
     >
       <div className="grid gap-4">
@@ -54,6 +157,7 @@ export function MediaUploadForm() {
             name="file"
             accept=".jpg,.jpeg,.png,.webp,.avif,.gif,image/jpeg,image/png,image/webp,image/avif,image/gif"
             required
+            disabled={isPending}
             onChange={(event) => {
               const file = event.target.files?.[0];
               setFileError(file ? validateMediaFile(file) : null);
@@ -74,12 +178,16 @@ export function MediaUploadForm() {
           >
             Alt text
           </label>
-          <Input id="media-alt-text" name="altText" placeholder="Alt text" />
+          <Input
+            id="media-alt-text"
+            name="altText"
+            placeholder="Alt text"
+            disabled={isPending}
+          />
         </div>
       </div>
-      <div className="grid gap-4">
+      <div className="grid content-start gap-4">
         <FormSelect
-          key={selectKey}
           name="locale"
           ariaLabel="Locale"
           placeholder="All locales"
@@ -94,6 +202,11 @@ export function MediaUploadForm() {
           Upload premium images first, then attach them to hero, about, SEO, or
           brand settings.
         </p>
+        {progressMessage ? (
+          <p role="status" className="text-xs text-accent">
+            {progressMessage}
+          </p>
+        ) : null}
         <Button type="submit" disabled={isPending}>
           {isPending ? "Uploading..." : "Upload media"}
         </Button>

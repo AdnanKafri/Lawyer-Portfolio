@@ -10,6 +10,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SectionShell } from "@/components/ui/section-shell";
+import { cn } from "@/lib/utils/cn";
 import type { ServiceItem } from "@/types/domain";
 
 const iconMap = {
@@ -29,10 +30,16 @@ export function ServicesSection({
   content: ServiceItem[];
 }) {
   const isArabic = locale === "ar";
+  const collectionClassName =
+    content.length === 1
+      ? "mx-auto max-w-2xl grid-cols-1"
+      : content.length === 2
+        ? "mx-auto max-w-4xl md:grid-cols-2"
+        : "max-w-6xl md:grid-cols-2 xl:grid-cols-3";
 
   return (
     <SectionShell id="services" className="pt-0">
-      <Reveal className="section-frame">
+      <Reveal className="section-frame mx-auto text-center">
         <SectionHeading
           eyebrow={
             isArabic ? "\u0627\u0644\u062e\u062f\u0645\u0627\u062a" : "Services"
@@ -47,9 +54,12 @@ export function ServicesSection({
               ? "تُعرض مجالات الممارسة هنا بصورة هادئة ومباشرة، مع مساحة كافية لتوسيع كل خدمة لاحقًا دون تغيير البنية."
               : "Each practice area is presented with editorial restraint so the section feels authoritative, not overdesigned."
           }
+          align="center"
         />
       </Reveal>
-      <div className="mt-12 grid items-start gap-x-8 md:grid-cols-2 xl:grid-cols-3">
+      <div
+        className={cn("mt-12 grid items-start gap-x-8", collectionClassName)}
+      >
         {content.map((service, index) => {
           const Icon =
             iconMap[service.iconKey as keyof typeof iconMap] ??

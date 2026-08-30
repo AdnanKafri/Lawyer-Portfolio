@@ -3,26 +3,32 @@
 import { revalidatePath } from "next/cache";
 import type { FormActionState } from "@/lib/actions/form-state";
 import { requireAdminContext } from "@/lib/domain/admin";
-import { uploadMediaAsset } from "@/lib/domain/media";
-import { validateMediaFile } from "@/lib/validation/media";
+import {
+  cancelMediaUpload,
+  completeMediaUpload,
+  createMediaUploadTarget,
+  type MediaUploadTarget,
+} from "@/lib/domain/media";
+import { validateMediaMetadata } from "@/lib/validation/media";
 
-export async function uploadMediaAction(
-  _previousState: FormActionState,
+export type MediaUploadActionState = FormActionState & {
+  target?: MediaUploadTarget;
+};
+
+export async function createMediaUploadTargetAction(
+  _previousState: MediaUploadActionState,
   formData: FormData,
-): Promise<FormActionState> {
+): Promise<MediaUploadActionState> {
   const adminContext = await requireAdminContext();
-  const file = formData.get("file");
-  const localeValue = String(formData.get("locale") ?? "").trim();
-  const altText = String(formData.get("altText") ?? "").trim();
+  const fileName = String(formData.get("fileName") ?? "").trim();
+  const mimeType = String(formData.get("mimeType") ?? "").trim();
+  const sizeBytes = Number(formData.get("sizeBytes") ?? 0);
 
-  if (!(file instanceof File) || file.size === 0) {
-    return {
-      status: "error",
-      message: "Please select a file to upload.",
-    };
-  }
-
-  const validationMessage = validateMediaFile(file);
+  const validationMessage = validateMediaMetadata({
+    fileName,
+    mimeType,
+    sizeBytes,
+  });
 
   if (validationMessage) {
     return {
@@ -32,12 +38,61 @@ export async function uploadMediaAction(
   }
 
   try {
-    await uploadMediaAsset({
+    const target = await createMediaUploadTarget({
+      organizationId: adminContext.adminUser.organization_id,
+      fileName,
+      mimeType,
+      sizeBytes,
+    });
+
+    return {
+      status: "success",
+      message: "Upload target ready.",
+      target,
+    };
+  } catch (error) {
+    return {
+      status: "error",
+      message: error instanceof Error ? error.message : "Media upload failed.",
+    };
+  }
+}
+
+export async function completeMediaUploadAction(
+  _previousState: FormActionState,
+  formData: FormData,
+): Promise<FormActionState> {
+  const adminContext = await requireAdminContext();
+  const fileName = String(formData.get("fileName") ?? "").trim();
+  const mimeType = String(formData.get("mimeType") ?? "").trim();
+  const sizeBytes = Number(formData.get("sizeBytes") ?? 0);
+  const path = String(formData.get("path") ?? "").trim();
+  const localeValue = String(formData.get("locale") ?? "").trim();
+  const altText = String(formData.get("altText") ?? "").trim();
+
+  const validationMessage = validateMediaMetadata({
+    fileName,
+    mimeType,
+    sizeBytes,
+  });
+
+  if (validationMessage || !path) {
+    return {
+      status: "error",
+      message: validationMessage ?? "Invalid media upload target.",
+    };
+  }
+
+  try {
+    await completeMediaUpload({
       organizationId: adminContext.adminUser.organization_id,
       adminUserId: adminContext.adminUser.id,
       locale:
         localeValue === "en" || localeValue === "ar" ? localeValue : undefined,
-      file,
+      path,
+      fileName,
+      mimeType,
+      sizeBytes,
       altText,
     });
 
@@ -53,4 +108,13 @@ export async function uploadMediaAction(
       message: error instanceof Error ? error.message : "Media upload failed.",
     };
   }
+}
+
+export async function cancelMediaUploadAction(path: string) {
+  const adminContext = await requireAdminContext();
+
+  await cancelMediaUpload({
+    organizationId: adminContext.adminUser.organization_id,
+    path,
+  });
 }

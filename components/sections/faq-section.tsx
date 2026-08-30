@@ -3,6 +3,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SectionShell } from "@/components/ui/section-shell";
+import { cn } from "@/lib/utils/cn";
 import type { FaqItem } from "@/types/domain";
 
 export function FaqSection({
@@ -13,10 +14,12 @@ export function FaqSection({
   content: FaqItem[];
 }) {
   const isArabic = locale === "ar";
+  const collectionClassName =
+    content.length <= 2 ? "mx-auto max-w-4xl" : "max-w-6xl";
 
   return (
     <SectionShell id="faq">
-      <Reveal className="section-frame">
+      <Reveal className="section-frame mx-auto text-center">
         <SectionHeading
           eyebrow={
             isArabic
@@ -33,9 +36,10 @@ export function FaqSection({
               ? "الهدف هو تبسيط نقاط القرار الأساسية مثل السرية، والتواصل، ونوع الملفات التي نقبلها."
               : "The answers focus on the practical details that matter first: confidentiality, responsiveness, and the types of matters we accept."
           }
+          align="center"
         />
       </Reveal>
-      <div className="mt-12 space-y-4">
+      <div className={cn("mt-12 space-y-4", collectionClassName)}>
         {content.map((item, index) => (
           <Reveal key={item.id} delay={index * 0.04}>
             <Card

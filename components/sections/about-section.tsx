@@ -3,6 +3,7 @@ import { PublicMedia } from "@/components/public/public-media";
 import { Card } from "@/components/ui/card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SectionShell } from "@/components/ui/section-shell";
+import { cn } from "@/lib/utils/cn";
 import type { AboutContent } from "@/types/domain";
 
 export function AboutSection({
@@ -13,6 +14,10 @@ export function AboutSection({
   content: AboutContent;
 }) {
   const isArabic = locale === "ar";
+  const credentialClassName =
+    content.credentials.length === 1
+      ? "mx-auto max-w-2xl md:grid-cols-1"
+      : "md:grid-cols-2";
 
   return (
     <SectionShell id="about">
@@ -25,21 +30,23 @@ export function AboutSection({
                 : "Profile"}
             </p>
             <div className="grid gap-6">
-              <div className="relative overflow-hidden rounded-[1.7rem] border border-border bg-black/18">
-                <div className="relative aspect-[4/3] w-full">
-                  {content.imageUrl ? (
-                    <PublicMedia
-                      src={content.imageUrl}
-                      alt={content.imageAlt ?? content.title}
-                      sizes="(max-width: 1023px) 100vw, 34vw"
-                      className="object-cover"
-                      fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]" />
-                  )}
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(4,5,8,0.06),rgba(4,5,8,0.5))]" />
-                </div>
+              <div className="relative overflow-hidden rounded-[1.4rem] border border-border bg-black/18">
+                {content.imageUrl ? (
+                  <PublicMedia
+                    src={content.imageUrl}
+                    alt={content.imageAlt ?? content.title}
+                    sizes="(max-width: 1023px) 100vw, 34vw"
+                    aspectRatio={1.18}
+                    minAspectRatio={0.82}
+                    maxAspectRatio={1.65}
+                    className="object-contain"
+                    containerClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]"
+                    fallbackClassName="bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]"
+                  />
+                ) : (
+                  <div className="aspect-[4/3] w-full bg-[radial-gradient(circle_at_top,rgba(193,161,103,0.2),transparent_38%),linear-gradient(180deg,rgba(6,8,12,0.3),rgba(6,8,12,0.92))]" />
+                )}
+                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(4,5,8,0.06),rgba(4,5,8,0.5))]" />
               </div>
               <div className="grid gap-4">
                 {content.highlights.map((item) => (
@@ -78,7 +85,7 @@ export function AboutSection({
                 </p>
               </Card>
             ) : null}
-            <div className="mt-10 grid gap-4 md:grid-cols-2">
+            <div className={cn("mt-10 grid gap-4", credentialClassName)}>
               {content.credentials.map((credential, index) => (
                 <Reveal key={credential.id} delay={0.12 + index * 0.05}>
                   <Card
